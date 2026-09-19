@@ -12,100 +12,26 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-*{box-sizing:border-box}
-:root{--bg:#F2F3F6;--surface:#FFFFFF;--surface-2:#F6F7FA;--ink:#181B22;--ink-soft:#666D7A;--ink-faint:#9BA1AB;--accent:#FF5A36;--accent-2:#FFB020;--success:#1E9E5A;--warning:#D98A1D;--danger:#E4483F;--info:#3468C0;--border:rgba(24,27,34,.09);--shadow:0 18px 45px rgba(24,27,34,.07);--r-lg:20px;--r-md:14px;--r-sm:10px}
-html{scroll-behavior:smooth}
-body{margin:0;font-family:"Prompt",sans-serif;color:var(--ink);min-height:100vh;background:radial-gradient(640px circle at 6% -8%,rgba(255,90,54,.12),transparent 55%),radial-gradient(520px circle at 104% 0%,rgba(255,176,32,.09),transparent 50%),var(--bg)}
-button,input,textarea,select{font-family:inherit!important}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-a{color:var(--accent)}
-.app{width:100%;max-width:1180px;margin:auto;padding:24px}
-.glass{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow)}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:14px 20px;margin-bottom:28px}
-.brand{display:flex;align-items:center;gap:14px;min-width:0}
-.brand-mark{position:relative;width:46px;height:46px;flex:none;display:flex;align-items:center;justify-content:center}
-.brand-mark::before{content:"";position:absolute;inset:-8px;border-radius:16px;background:radial-gradient(circle,rgba(255,90,54,.20),transparent 70%)}
-.brand img{position:relative;width:100%;height:100%;object-fit:contain;background:transparent}
-.brand-text{min-width:0}
-.brand-title{font-size:19px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.brand-desc{color:var(--ink-soft);font-size:12px}
-.page{display:none}.page.active{display:block}
-.login-wrap{min-height:calc(100vh - 48px);display:flex;align-items:center;justify-content:center}
-.login-card{width:100%;max-width:440px;padding:38px 34px;text-align:center}
-.login-mark{position:relative;width:74px;height:74px;margin:0 auto 22px;display:flex;align-items:center;justify-content:center}
-.login-mark::before{content:"";position:absolute;inset:-16px;border-radius:50%;background:radial-gradient(circle,rgba(255,90,54,.22),rgba(255,176,32,.08) 60%,transparent 75%)}
-.login-logo{position:relative;width:100%;height:100%;object-fit:contain;background:transparent}
-.login-title{text-align:center;font-size:26px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
-.login-subtitle{text-align:center;color:var(--ink-soft);margin-bottom:30px;font-size:14px}
-.form-label{color:#4B5563;font-size:13px;font-weight:500;margin-bottom:7px;text-align:left}
-.form-control,.form-select{background:var(--surface-2)!important;border:1px solid var(--border)!important;color:var(--ink)!important;border-radius:var(--r-md)!important;padding:12px 14px!important;transition:.15s}
-.form-control:focus,.form-select:focus{background:#fff!important;border-color:var(--accent)!important;box-shadow:0 0 0 3px rgba(255,90,54,.12)!important}
-textarea.form-control{min-height:100px}
-.btn-main{border:0;border-radius:var(--r-md);padding:12px 18px;font-weight:600;background:var(--ink);color:#fff;transition:.15s}
-.btn-main:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(24,27,34,.18)}
-.btn-green{background:linear-gradient(135deg,var(--accent),#FF7A52);color:#fff}
-.btn-green:hover{box-shadow:0 8px 20px rgba(255,90,54,.32)}
-.btn-danger-custom{background:rgba(228,72,63,.1);color:#C23A32;border:1px solid rgba(228,72,63,.2)}
-.btn-dark-custom{background:var(--surface-2);color:var(--ink);border:1px solid var(--border)}
-.btn-sm-custom{border:0;border-radius:9px;padding:7px 11px;font-size:12px;transition:.15s}
-.btn-sm-custom:hover{opacity:.72}
-.btn-copy{background:rgba(30,158,90,.1);color:#187A45;border:1px solid rgba(30,158,90,.2)}
-.auto-code{display:flex;gap:8px}.auto-code .form-control{flex:1}
-.code-hint{color:var(--ink-faint);font-size:11px;margin-top:6px;text-align:left}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
-.stat{padding:20px;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent)}
-.stat:nth-child(2){border-left-color:var(--warning)}.stat:nth-child(3){border-left-color:var(--info)}.stat:nth-child(4){border-left-color:var(--success)}
-.stat-icon{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:11px;background:var(--surface-2);color:var(--ink-soft);margin-bottom:14px}
-.stat-value{font-size:26px;font-weight:700;letter-spacing:-.01em}
-.stat-label{color:var(--ink-soft);font-size:12px;margin-top:2px}
-.section-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:18px}
-.section-title{font-size:19px;font-weight:600;letter-spacing:-.01em}
-.jobs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
-.job-card{padding:22px;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--border);transition:.15s}
-.job-card:hover{border-color:rgba(255,90,54,.35);box-shadow:0 12px 30px rgba(24,27,34,.06)}
-.job-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.job-title{font-size:17px;font-weight:600}
-.job-description{color:var(--ink-soft);font-size:13px;margin-top:5px;white-space:pre-line;line-height:1.5}
-.badge-status{border-radius:100px;padding:5px 12px;font-size:11px;font-weight:500;white-space:nowrap}
-.status-pending{background:rgba(217,138,29,.13);color:#9A6212}
-.status-progress{background:rgba(52,104,192,.12);color:#28508F}
-.status-done{background:rgba(30,158,90,.12);color:#187A45}
-.status-cancel{background:rgba(228,72,63,.12);color:#C23A32}
-.progress{height:6px;background:var(--surface-2);border-radius:50px;overflow:hidden}
-.progress-bar{background:linear-gradient(90deg,var(--accent),var(--accent-2))}
-.job-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
-.info-box{padding:12px;border-radius:12px;background:var(--surface-2)}
-.info-label{color:var(--ink-faint);font-size:11px}
-.info-value{font-size:13px;margin-top:3px;font-weight:500}
-.admin-header{padding:22px 24px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;gap:15px}
-.admin-title{font-size:22px;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
-.admin-title i{color:var(--accent)}
-.admin-user{color:var(--ink-soft);font-size:12px;margin-top:2px}
-.tabs{display:flex;gap:6px;padding:6px;margin-bottom:20px;overflow-x:auto}
-.tab-btn{border:0;background:transparent;color:var(--ink-soft);font-weight:500;border-radius:var(--r-sm);padding:10px 16px;white-space:nowrap;transition:.15s}
-.tab-btn.active{background:var(--ink);color:#fff}
-.admin-panel{display:none}.admin-panel.active{display:block}
-.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px}
-.table-wrap{overflow-x:auto;border-radius:16px;border:1px solid var(--border)}
-.table{margin:0;color:var(--ink);min-width:750px}
-.table>:not(caption)>*>*{background:var(--surface);color:var(--ink);border-color:#EEF0F3;padding:13px;vertical-align:middle}
-.table thead th{color:var(--ink-soft);font-size:12px;font-weight:500}
-.table tbody tr:hover>*{background:var(--surface-2)}
-.empty{text-align:center;padding:55px 20px;color:var(--ink-faint);border:1px dashed var(--border);border-radius:var(--r-lg)}
-.empty i{font-size:38px;display:block;margin-bottom:10px;color:#C7CBD1}
-.modal-content{background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:22px}
-.modal-header,.modal-footer{border-color:#EEF0F3}
-.btn-close{filter:none}
-.toast-container{position:fixed;right:20px;bottom:20px;z-index:9999}
-.toast-custom{min-width:280px;background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:0 15px 40px rgba(24,27,34,.15)}
-@media(max-width:800px){.stats-grid{grid-template-columns:repeat(2,1fr)}.jobs-grid{grid-template-columns:1fr}}
-@media(max-width:600px){.app{padding:14px}.login-card{padding:26px 20px}.stats-grid{gap:8px}.stat{padding:14px}.stat-value{font-size:20px}.topbar{padding:12px 14px}.brand-title{font-size:16px}.job-info{grid-template-columns:1fr}.admin-header{align-items:flex-start;flex-direction:column}}
+*{box-sizing:border-box} :root{--black:#080808;--dark:#111;--green:#20d46b;--red:#ff4545;--blue:#4da3ff;--border:rgba(255,255,255,.09)}
+body{margin:0;font-family:"Prompt",sans-serif;background:radial-gradient(circle at 10% 10%,rgba(32,212,107,.1),transparent 30%),radial-gradient(circle at 90% 90%,rgba(77,163,255,.08),transparent 30%),var(--black);color:#fff;min-height:100vh}
+button,input,textarea,select{font-family:inherit!important}.app{width:100%;max-width:1180px;margin:auto;padding:20px}
+.glass{background:rgba(18,18,18,.82);border:1px solid var(--border);border-radius:24px;backdrop-filter:blur(20px);box-shadow:0 20px 70px rgba(0,0,0,.25)}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:15px 18px;margin-bottom:25px}.brand{display:flex;align-items:center;gap:12px;min-width:0}.brand img{width:48px;height:48px;border-radius:14px;object-fit:cover;background:#222}.brand-text{min-width:0}.brand-title{font-size:19px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.brand-desc{color:#888;font-size:12px}
+.page{display:none}.page.active{display:block}.login-wrap{min-height:calc(100vh - 40px);display:flex;align-items:center;justify-content:center}.login-card{width:100%;max-width:470px;padding:30px}.login-logo{width:82px;height:82px;object-fit:cover;border-radius:24px;display:block;margin:0 auto 20px;background:#191919}.login-title{text-align:center;font-size:28px;font-weight:700;margin-bottom:5px}.login-subtitle{text-align:center;color:#777;margin-bottom:28px;font-size:14px}
+.form-label{color:#bbb;font-size:13px;margin-bottom:7px}.form-control,.form-select{background:#101010!important;border:1px solid #292929!important;color:white!important;border-radius:14px!important;padding:12px 14px!important}.form-control:focus,.form-select:focus{border-color:rgba(32,212,107,.7)!important;box-shadow:0 0 0 3px rgba(32,212,107,.08)!important}textarea.form-control{min-height:100px}
+.btn-main{border:0;border-radius:14px;padding:12px 18px;font-weight:600;background:#fff;color:#000;transition:.2s}.btn-main:hover{transform:translateY(-1px);opacity:.9}.btn-green{background:var(--green);color:#000}.btn-danger-custom{background:rgba(255,69,69,.12);color:#ff6666;border:1px solid rgba(255,69,69,.2)}.btn-dark-custom{background:#1b1b1b;color:#fff;border:1px solid #292929}.btn-sm-custom{border:0;border-radius:10px;padding:7px 11px;font-size:12px}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:20px}.stat{padding:20px;border-radius:20px;background:#111;border:1px solid var(--border)}.stat-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:#1c1c1c;margin-bottom:15px}.stat-value{font-size:27px;font-weight:700}.stat-label{color:#777;font-size:12px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:18px}.section-title{font-size:20px;font-weight:600}.jobs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}.job-card{padding:22px;border-radius:20px;background:#111;border:1px solid var(--border)}.job-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.job-title{font-size:18px;font-weight:600}.job-description{color:#888;font-size:13px;margin-top:5px;white-space:pre-line}.badge-status{border-radius:100px;padding:5px 10px;font-size:11px;white-space:nowrap}.status-pending{background:rgba(255,159,28,.12);color:#ffb74d}.status-progress{background:rgba(77,163,255,.12);color:#64b0ff}.status-done{background:rgba(32,212,107,.12);color:#43e681}.status-cancel{background:rgba(255,69,69,.12);color:#ff6666}.progress{height:7px;background:#252525;border-radius:50px;overflow:hidden}.progress-bar{background:var(--green)}.job-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.info-box{padding:12px;border-radius:13px;background:#171717}.info-label{color:#666;font-size:11px}.info-value{font-size:13px;margin-top:3px}
+.admin-header{padding:20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:15px}.admin-title{font-size:24px;font-weight:700}.admin-user{color:#777;font-size:12px}.tabs{display:flex;gap:8px;padding:7px;margin-bottom:20px;overflow-x:auto}.tab-btn{border:0;background:transparent;color:#777;border-radius:12px;padding:10px 15px;white-space:nowrap}.tab-btn.active{background:#fff;color:#000}.admin-panel{display:none}.admin-panel.active{display:block}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px}.table-wrap{overflow-x:auto;border-radius:18px;border:1px solid var(--border)}.table{margin:0;color:#fff;min-width:750px}.table>:not(caption)>*>*{background:#111;color:#fff;border-color:#252525;padding:13px;vertical-align:middle}.table thead th{color:#777;font-size:12px;font-weight:500}
+.empty{text-align:center;padding:55px 20px;color:#666;border:1px dashed #292929;border-radius:20px}.empty i{font-size:40px;display:block;margin-bottom:10px}.modal-content{background:#111;color:#fff;border:1px solid #292929;border-radius:22px}.modal-header,.modal-footer{border-color:#292929}.btn-close{filter:invert(1)}
+.toast-container{position:fixed;right:20px;bottom:20px;z-index:9999}.toast-custom{min-width:280px;background:#171717;color:#fff;border:1px solid #292929;border-radius:15px;padding:14px 16px;box-shadow:0 15px 40px rgba(0,0,0,.4)}
+@media(max-width:800px){.stats-grid{grid-template-columns:repeat(2,1fr)}.jobs-grid{grid-template-columns:1fr}}@media(max-width:600px){.app{padding:12px}.login-card{padding:22px}.stats-grid{gap:8px}.stat{padding:15px}.stat-value{font-size:21px}.topbar{padding:12px}.brand-title{font-size:16px}.job-info{grid-template-columns:1fr}.admin-header{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
 <body>
 <div class="app">
 <section id="customerLoginPage" class="page active"><div class="login-wrap"><div class="login-card glass">
-<div class="login-mark"><img id="loginLogo" class="login-logo" src="" alt="Logo"></div>
+<img id="loginLogo" class="login-logo" src="" alt="Logo">
 <div id="loginSiteName" class="login-title">FLAME SHOP</div>
 <div id="loginSiteDescription" class="login-subtitle">ระบบติดตามสถานะงานของลูกค้า</div>
 <form id="customerLoginForm">
@@ -117,7 +43,7 @@ textarea.form-control{min-height:100px}
 </div></div></section>
 
 <section id="customerApp" class="page">
-<div class="topbar glass"><div class="brand"><div class="brand-mark"><img id="customerLogo" src="" alt="Logo"></div><div class="brand-text"><div id="customerSiteName" class="brand-title">FLAME SHOP</div><div id="customerSiteDescription" class="brand-desc">ระบบติดตามสถานะงาน</div></div></div><button class="btn btn-dark-custom btn-sm" onclick="customerLogout()"><i class="bi bi-box-arrow-right"></i> ออกจากระบบ</button></div>
+<div class="topbar glass"><div class="brand"><img id="customerLogo" src="" alt="Logo"><div class="brand-text"><div id="customerSiteName" class="brand-title">FLAME SHOP</div><div id="customerSiteDescription" class="brand-desc">ระบบติดตามสถานะงาน</div></div></div><button class="btn btn-dark-custom btn-sm" onclick="customerLogout()"><i class="bi bi-box-arrow-right"></i> ออกจากระบบ</button></div>
 <div class="mb-4"><div class="text-secondary small">ยินดีต้อนรับ</div><div id="customerDisplayName" style="font-size:28px;font-weight:700">-</div></div>
 <div class="stats-grid">
 <div class="stat"><div class="stat-icon"><i class="bi bi-briefcase"></i></div><div id="customerTotal" class="stat-value">0</div><div class="stat-label">งานทั้งหมด</div></div>
@@ -129,7 +55,7 @@ textarea.form-control{min-height:100px}
 </section>
 
 <section id="adminLoginPage" class="page"><div class="login-wrap"><div class="login-card glass">
-<div class="login-mark"><img id="adminLoginLogo" class="login-logo" src="" alt="Logo"></div><div class="login-title">Admin</div><div class="login-subtitle">FLAME SHOP Management</div>
+<img id="adminLoginLogo" class="login-logo" src="" alt="Logo"><div class="login-title">Admin</div><div class="login-subtitle">FLAME SHOP Management</div>
 <form id="adminLoginForm"><div class="mb-3"><label class="form-label">อีเมล</label><input type="email" id="adminEmail" class="form-control" placeholder="admin@example.com" required></div><div class="mb-3"><label class="form-label">รหัสผ่าน</label><input type="password" id="adminPassword" class="form-control" placeholder="••••••••" required></div><button type="submit" class="btn-main w-100"><i class="bi bi-shield-lock"></i> เข้าสู่ระบบ Admin</button></form>
 <div class="text-center mt-3"><button class="btn btn-link text-secondary text-decoration-none" onclick="showCustomerLogin()">← กลับหน้าลูกค้า</button></div>
 </div></div></section>
@@ -164,7 +90,7 @@ textarea.form-control{min-height:100px}
 </div>
 
 <div class="modal fade" id="customerModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title"><i class="bi bi-person"></i> <span id="customerModalTitle">เพิ่มลูกค้า</span></h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-<form id="customerForm"><div class="modal-body"><input type="hidden" id="editCustomerId"><div class="mb-3"><label class="form-label">ชื่อลูกค้า *</label><input id="customerFormName" class="form-control" required></div><div class="mb-3"><label class="form-label">รหัสลูกค้า *</label><div class="auto-code"><input id="customerFormCode" class="form-control" placeholder="FLAME01" required><button type="button" class="btn-sm-custom btn-dark-custom" onclick="generateCustomerCode(true)" title="สร้างรหัสใหม่"><i class="bi bi-arrow-clockwise"></i></button></div><div class="code-hint">ระบบสร้างรหัสให้อัตโนมัติ เช่น FLAME01, FLAME02...</div></div><div class="mb-3"><label class="form-label">เบอร์โทรศัพท์</label><input id="customerFormPhone" class="form-control"></div><div><label class="form-label">หมายเหตุ</label><textarea id="customerFormNote" class="form-control"></textarea></div></div><div class="modal-footer"><button type="button" class="btn btn-dark" data-bs-dismiss="modal">ยกเลิก</button><button type="submit" class="btn-main btn-green">บันทึก</button></div></form></div></div></div>
+<form id="customerForm"><div class="modal-body"><input type="hidden" id="editCustomerId"><div class="mb-3"><label class="form-label">ชื่อลูกค้า *</label><input id="customerFormName" class="form-control" required></div><div class="mb-3"><label class="form-label">รหัสลูกค้า *</label><input id="customerFormCode" class="form-control" placeholder="FLAME01" required></div><div class="mb-3"><label class="form-label">เบอร์โทรศัพท์</label><input id="customerFormPhone" class="form-control"></div><div><label class="form-label">หมายเหตุ</label><textarea id="customerFormNote" class="form-control"></textarea></div></div><div class="modal-footer"><button type="button" class="btn btn-dark" data-bs-dismiss="modal">ยกเลิก</button><button type="submit" class="btn-main btn-green">บันทึก</button></div></form></div></div></div>
 
 <div class="modal fade" id="jobModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title"><i class="bi bi-briefcase"></i> <span id="jobModalTitle">เพิ่มงาน</span></h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
 <form id="jobForm"><div class="modal-body"><input type="hidden" id="editJobId"><div class="row g-3">
@@ -176,7 +102,7 @@ textarea.form-control{min-height:100px}
 <div class="col-md-4"><label class="form-label">ราคา</label><input type="number" id="jobPrice" class="form-control" min="0" step="0.01"></div>
 <div class="col-md-6"><label class="form-label">สถานะ</label><select id="jobStatus" class="form-select"><option value="PENDING">ยังไม่เริ่ม</option><option value="PROGRESS">กำลังดำเนินการ</option><option value="DONE">เสร็จแล้ว</option><option value="CANCEL">ยกเลิก</option></select></div>
 <div class="col-md-6"><label class="form-label">ความคืบหน้า (%)</label><input type="number" id="jobProgress" class="form-control" min="0" max="100" value="0"></div>
-<div class="col-md-6"><label class="form-label">ลิงก์เว็บเช็คงาน</label><input type="url" id="jobCheckUrl" class="form-control" placeholder="https://..."></div><div class="col-md-6"><label class="form-label">ลิงก์เวลาส่งให้ลูกค้า</label><input type="url" id="jobDeliveryLink" class="form-control" placeholder="https://..."></div>
+<div class="col-12"><label class="form-label">ลิงก์ไฟล์งาน</label><input type="url" id="jobFileUrl" class="form-control" placeholder="https://..."></div>
 <div class="col-12"><label class="form-label">หมายเหตุ</label><textarea id="jobNote" class="form-control"></textarea></div>
 </div></div><div class="modal-footer"><button type="button" class="btn btn-dark" data-bs-dismiss="modal">ยกเลิก</button><button type="submit" class="btn-main btn-green"><i class="bi bi-save"></i> บันทึกงาน</button></div></form>
 </div></div></div>
@@ -259,7 +185,7 @@ function renderCustomerJobs(){
  const c=document.getElementById("customerJobsContainer"),filter=document.getElementById("customerFilter").value;
  let list=filter==="ALL"?customerJobs:customerJobs.filter(j=>j.status===filter);
  if(!list.length){c.innerHTML='<div class="empty" style="grid-column:1/-1"><i class="bi bi-briefcase"></i>ยังไม่มีงานในรายการ</div>';return}
- c.innerHTML=list.map(job=>{const st=getStatus(job.status);return `<div class="job-card"><div class="job-top"><div><div class="job-title">${escapeHtml(job.name||"-")}</div><div class="job-description">${escapeHtml(job.description||"ไม่มีรายละเอียด")}</div></div><span class="badge-status ${st.class}">${st.text}</span></div><div class="mt-4"><div class="d-flex justify-content-between mb-2"><span class="text-secondary small">ความคืบหน้า</span><span class="small">${job.progress||0}%</span></div><div class="progress"><div class="progress-bar" style="width:${job.progress||0}%"></div></div></div><div class="job-info"><div class="info-box"><div class="info-label">วันที่เริ่ม</div><div class="info-value">${formatDate(job.start_date)}</div></div><div class="info-box"><div class="info-label">กำหนดส่ง</div><div class="info-value">${formatDate(job.deadline)}</div></div><div class="info-box"><div class="info-label">ราคา</div><div class="info-value">${formatMoney(job.price)}</div></div><div class="info-box"><div class="info-label">อัปเดตล่าสุด</div><div class="info-value">${formatDateTime(job.updated_at)}</div></div></div>${job.note?`<div class="mt-3 p-3 rounded-3" style="background:#f4f6f8"><div class="text-secondary small">หมายเหตุ</div><div class="small mt-1">${escapeHtml(job.note)}</div></div>`:""}${job.file_url?`<a href="${escapeAttribute(job.file_url)}" target="_blank" rel="noopener" class="btn-main w-100 d-block text-center mt-3" style="text-decoration:none"><i class="bi bi-file-earmark-arrow-down"></i> เปิดไฟล์งาน</a>`:""}</div>`}).join("")
+ c.innerHTML=list.map(job=>{const st=getStatus(job.status);return `<div class="job-card"><div class="job-top"><div><div class="job-title">${escapeHtml(job.name||"-")}</div><div class="job-description">${escapeHtml(job.description||"ไม่มีรายละเอียด")}</div></div><span class="badge-status ${st.class}">${st.text}</span></div><div class="mt-4"><div class="d-flex justify-content-between mb-2"><span class="text-secondary small">ความคืบหน้า</span><span class="small">${job.progress||0}%</span></div><div class="progress"><div class="progress-bar" style="width:${job.progress||0}%"></div></div></div><div class="job-info"><div class="info-box"><div class="info-label">วันที่เริ่ม</div><div class="info-value">${formatDate(job.start_date)}</div></div><div class="info-box"><div class="info-label">กำหนดส่ง</div><div class="info-value">${formatDate(job.deadline)}</div></div><div class="info-box"><div class="info-label">ราคา</div><div class="info-value">${formatMoney(job.price)}</div></div><div class="info-box"><div class="info-label">อัปเดตล่าสุด</div><div class="info-value">${formatDateTime(job.updated_at)}</div></div></div>${job.note?`<div class="mt-3 p-3 rounded-3" style="background:#171717"><div class="text-secondary small">หมายเหตุ</div><div class="small mt-1">${escapeHtml(job.note)}</div></div>`:""}${job.file_url?`<a href="${escapeAttribute(job.file_url)}" target="_blank" rel="noopener" class="btn-main w-100 d-block text-center mt-3" style="text-decoration:none"><i class="bi bi-file-earmark-arrow-down"></i> เปิดไฟล์งาน</a>`:""}</div>`}).join("")
 }
 function customerLogout(){currentCustomer=null;customerJobs=[];document.getElementById("customerLoginForm").reset();showCustomerLogin()}
 
@@ -310,36 +236,12 @@ function renderAdminStats(){
 function renderAdminCustomers(){
  const tbody=document.getElementById("customersTableBody");
  if(!customers.length){tbody.innerHTML='<tr><td colspan="5"><div class="empty"><i class="bi bi-people"></i>ยังไม่มีข้อมูลลูกค้า</div></td></tr>';return}
- tbody.innerHTML=customers.map(c=>`<tr><td><strong>${escapeHtml(c.name)}</strong></td><td><span class="badge-status status-progress">${escapeHtml(c.customer_code)}</span></td><td>${escapeHtml(c.phone||"-")}</td><td>${escapeHtml(c.note||"-")}</td><td><div class="d-flex gap-1"><button class="btn-sm-custom btn-copy" onclick="copyCustomerInfo('${c.id}')" title="คัดลอกข้อมูลลูกค้า"><i class="bi bi-copy"></i></button><button class="btn-sm-custom btn-dark-custom" onclick="editCustomer('${c.id}')" title="แก้ไข"><i class="bi bi-pencil"></i></button><button class="btn-sm-custom btn-danger-custom" onclick="deleteCustomer('${c.id}')" title="ลบ"><i class="bi bi-trash"></i></button></div></td></tr>`).join("")
-}
-function getNextCustomerCode(){
- const nums=customers.map(c=>{const m=String(c.customer_code||"").match(/^FLAME(\\d+)$/i);return m?Number(m[1]):0}).filter(Number.isFinite);
- const next=(nums.length?Math.max(...nums):0)+1;
- return "FLAME"+String(next).padStart(2,"0");
-}
-function generateCustomerCode(force=false){
- const input=document.getElementById("customerFormCode");
- if(force || !input.value.trim()) input.value=getNextCustomerCode();
+ tbody.innerHTML=customers.map(c=>`<tr><td><strong>${escapeHtml(c.name)}</strong></td><td><span class="badge-status status-progress">${escapeHtml(c.customer_code)}</span></td><td>${escapeHtml(c.phone||"-")}</td><td>${escapeHtml(c.note||"-")}</td><td><div class="d-flex gap-1"><button class="btn-sm-custom btn-dark-custom" onclick="editCustomer('${c.id}')"><i class="bi bi-pencil"></i></button><button class="btn-sm-custom btn-danger-custom" onclick="deleteCustomer('${c.id}')"><i class="bi bi-trash"></i></button></div></td></tr>`).join("")
 }
 function openCustomerModal(id=null){
  document.getElementById("customerForm").reset();document.getElementById("editCustomerId").value="";document.getElementById("customerModalTitle").textContent=id?"แก้ไขลูกค้า":"เพิ่มลูกค้า";
  if(id){const c=customers.find(x=>x.id===id);if(!c)return;document.getElementById("editCustomerId").value=c.id;document.getElementById("customerFormName").value=c.name||"";document.getElementById("customerFormCode").value=c.customer_code||"";document.getElementById("customerFormPhone").value=c.phone||"";document.getElementById("customerFormNote").value=c.note||""}
- else generateCustomerCode();
  customerModal.show();
-}
-async function copyCustomerInfo(id){
- const c=customers.find(x=>x.id===id);if(!c)return;
- const list=jobs.filter(j=>j.customer_id===id).sort((a,b)=>new Date(b.created_at||b.updated_at||0)-new Date(a.created_at||a.updated_at||0));
- const j=list[0];
- const text=[
-  `ชื่อลูกค้า: ${c.name||"-"}`,
-  `รหัสลูกค้า: ${c.customer_code||"-"}`,
-  `กำหนดส่งงาน: ${formatDate(j?.deadline)}`,
-  `ลิงก์เว็บเช็คงาน: ${j?.check_url||j?.file_url||"-"}`,
-  `ลิงก์เวลาส่งให้ลูกค้า: ${j?.delivery_link||"-"}`
- ].join("\\n");
- try{await navigator.clipboard.writeText(text);toast("คัดลอกข้อมูลลูกค้าแล้ว")}
- catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();toast("คัดลอกข้อมูลลูกค้าแล้ว")}
 }
 function editCustomer(id){openCustomerModal(id)}
 async function saveCustomer(e){
@@ -362,7 +264,7 @@ function renderAdminJobs(){
 }
 function openJobModal(id=null){
  document.getElementById("jobForm").reset();document.getElementById("editJobId").value="";document.getElementById("jobProgress").value=0;document.getElementById("jobStatus").value="PENDING";document.getElementById("jobModalTitle").textContent=id?"แก้ไขงาน":"เพิ่มงาน";fillCustomerSelect();
- if(id){const j=jobs.find(x=>x.id===id);if(!j)return;document.getElementById("editJobId").value=j.id;document.getElementById("jobCustomer").value=j.customer_id;document.getElementById("jobName").value=j.name||"";document.getElementById("jobDescription").value=j.description||"";document.getElementById("jobStartDate").value=j.start_date||"";document.getElementById("jobDeadline").value=j.deadline||"";document.getElementById("jobPrice").value=j.price||0;document.getElementById("jobStatus").value=j.status||"PENDING";document.getElementById("jobProgress").value=j.progress||0;document.getElementById("jobCheckUrl").value=j.check_url||j.file_url||"";document.getElementById("jobDeliveryLink").value=j.delivery_link||"";document.getElementById("jobNote").value=j.note||""}
+ if(id){const j=jobs.find(x=>x.id===id);if(!j)return;document.getElementById("editJobId").value=j.id;document.getElementById("jobCustomer").value=j.customer_id;document.getElementById("jobName").value=j.name||"";document.getElementById("jobDescription").value=j.description||"";document.getElementById("jobStartDate").value=j.start_date||"";document.getElementById("jobDeadline").value=j.deadline||"";document.getElementById("jobPrice").value=j.price||0;document.getElementById("jobStatus").value=j.status||"PENDING";document.getElementById("jobProgress").value=j.progress||0;document.getElementById("jobFileUrl").value=j.file_url||"";document.getElementById("jobNote").value=j.note||""}
  jobModal.show();
 }
 function editJob(id){openJobModal(id)}
@@ -373,7 +275,7 @@ function fillCustomerSelect(){
 async function saveJob(e){
  e.preventDefault();const id=document.getElementById("editJobId").value,status=document.getElementById("jobStatus").value;
  let progress=Math.max(0,Math.min(100,Number(document.getElementById("jobProgress").value)||0));if(status==="DONE")progress=100;
- const checkUrl=document.getElementById("jobCheckUrl").value.trim()||null,deliveryLink=document.getElementById("jobDeliveryLink").value.trim()||null;const payload={customer_id:document.getElementById("jobCustomer").value,name:document.getElementById("jobName").value.trim(),description:document.getElementById("jobDescription").value.trim()||null,start_date:document.getElementById("jobStartDate").value||null,deadline:document.getElementById("jobDeadline").value||null,price:Number(document.getElementById("jobPrice").value)||0,status,progress,file_url:checkUrl,check_url:checkUrl,delivery_link:deliveryLink,note:document.getElementById("jobNote").value.trim()||null};
+ const payload={customer_id:document.getElementById("jobCustomer").value,name:document.getElementById("jobName").value.trim(),description:document.getElementById("jobDescription").value.trim()||null,start_date:document.getElementById("jobStartDate").value||null,deadline:document.getElementById("jobDeadline").value||null,price:Number(document.getElementById("jobPrice").value)||0,status,progress,file_url:document.getElementById("jobFileUrl").value.trim()||null,note:document.getElementById("jobNote").value.trim()||null};
  const result=id?await supabaseClient.from("jobs").update(payload).eq("id",id):await supabaseClient.from("jobs").insert(payload);
  if(result.error){console.error(result.error);return toast(result.error.message,"error")}
  jobModal.hide();toast(id?"แก้ไขงานแล้ว":"เพิ่มงานแล้ว");await loadJobs();renderAdminStats();renderAdminJobs();
