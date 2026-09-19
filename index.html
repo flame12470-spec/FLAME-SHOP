@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLAME SHOP - ระบบส่งงานลูกค้า</title>
+<link rel="icon" id="favicon" href="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box} :root{--black:#080808;--dark:#111;--green:#20d46b;--red:#ff4545;--blue:#4da3ff;--border:rgba(255,255,255,.09)}
+body{margin:0;font-family:"Prompt",sans-serif;background:radial-gradient(circle at 10% 10%,rgba(32,212,107,.1),transparent 30%),radial-gradient(circle at 90% 90%,rgba(77,163,255,.08),transparent 30%),var(--black);color:#fff;min-height:100vh}
+button,input,textarea,select{font-family:inherit!important}.app{width:100%;max-width:1180px;margin:auto;padding:20px}
+.glass{background:rgba(18,18,18,.82);border:1px solid var(--border);border-radius:24px;backdrop-filter:blur(20px);box-shadow:0 20px 70px rgba(0,0,0,.25)}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:15px 18px;margin-bottom:25px}.brand{display:flex;align-items:center;gap:12px;min-width:0}.brand img{width:48px;height:48px;border-radius:14px;object-fit:cover;background:#222}.brand-text{min-width:0}.brand-title{font-size:19px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.brand-desc{color:#888;font-size:12px}
+.page{display:none}.page.active{display:block}.login-wrap{min-height:calc(100vh - 40px);display:flex;align-items:center;justify-content:center}.login-card{width:100%;max-width:470px;padding:30px}.login-logo{width:82px;height:82px;object-fit:cover;border-radius:24px;display:block;margin:0 auto 20px;background:#191919}.login-title{text-align:center;font-size:28px;font-weight:700;margin-bottom:5px}.login-subtitle{text-align:center;color:#777;margin-bottom:28px;font-size:14px}
+.form-label{color:#bbb;font-size:13px;margin-bottom:7px}.form-control,.form-select{background:#101010!important;border:1px solid #292929!important;color:white!important;border-radius:14px!important;padding:12px 14px!important}.form-control:focus,.form-select:focus{border-color:rgba(32,212,107,.7)!important;box-shadow:0 0 0 3px rgba(32,212,107,.08)!important}textarea.form-control{min-height:100px}
+.btn-main{border:0;border-radius:14px;padding:12px 18px;font-weight:600;background:#fff;color:#000;transition:.2s}.btn-main:hover{transform:translateY(-1px);opacity:.9}.btn-green{background:var(--green);color:#000}.btn-danger-custom{background:rgba(255,69,69,.12);color:#ff6666;border:1px solid rgba(255,69,69,.2)}.btn-dark-custom{background:#1b1b1b;color:#fff;border:1px solid #292929}.btn-sm-custom{border:0;border-radius:10px;padding:7px 11px;font-size:12px}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:20px}.stat{padding:20px;border-radius:20px;background:#111;border:1px solid var(--border)}.stat-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:#1c1c1c;margin-bottom:15px}.stat-value{font-size:27px;font-weight:700}.stat-label{color:#777;font-size:12px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:18px}.section-title{font-size:20px;font-weight:600}.jobs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}.job-card{padding:22px;border-radius:20px;background:#111;border:1px solid var(--border)}.job-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.job-title{font-size:18px;font-weight:600}.job-description{color:#888;font-size:13px;margin-top:5px;white-space:pre-line}.badge-status{border-radius:100px;padding:5px 10px;font-size:11px;white-space:nowrap}.status-pending{background:rgba(255,159,28,.12);color:#ffb74d}.status-progress{background:rgba(77,163,255,.12);color:#64b0ff}.status-done{background:rgba(32,212,107,.12);color:#43e681}.status-cancel{background:rgba(255,69,69,.12);color:#ff6666}.progress{height:7px;background:#252525;border-radius:50px;overflow:hidden}.progress-bar{background:var(--green)}.job-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.info-box{padding:12px;border-radius:13px;background:#171717}.info-label{color:#666;font-size:11px}.info-value{font-size:13px;margin-top:3px}
+.admin-header{padding:20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:15px}.admin-title{font-size:24px;font-weight:700}.admin-user{color:#777;font-size:12px}.tabs{display:flex;gap:8px;padding:7px;margin-bottom:20px;overflow-x:auto}.tab-btn{border:0;background:transparent;color:#777;border-radius:12px;padding:10px 15px;white-space:nowrap}.tab-btn.active{background:#fff;color:#000}.admin-panel{display:none}.admin-panel.active{display:block}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px}.table-wrap{overflow-x:auto;border-radius:18px;border:1px solid var(--border)}.table{margin:0;color:#fff;min-width:750px}.table>:not(caption)>*>*{background:#111;color:#fff;border-color:#252525;padding:13px;vertical-align:middle}.table thead th{color:#777;font-size:12px;font-weight:500}
+.empty{text-align:center;padding:55px 20px;color:#666;border:1px dashed #292929;border-radius:20px}.empty i{font-size:40px;display:block;margin-bottom:10px}.modal-content{background:#111;color:#fff;border:1px solid #292929;border-radius:22px}.modal-header,.modal-footer{border-color:#292929}.btn-close{filter:invert(1)}
+.toast-container{position:fixed;right:20px;bottom:20px;z-index:9999}.toast-custom{min-width:280px;background:#171717;color:#fff;border:1px solid #292929;border-radius:15px;padding:14px 16px;box-shadow:0 15px 40px rgba(0,0,0,.4)}
+@media(max-width:800px){.stats-grid{grid-template-columns:repeat(2,1fr)}.jobs-grid{grid-template-columns:1fr}}@media(max-width:600px){.app{padding:12px}.login-card{padding:22px}.stats-grid{gap:8px}.stat{padding:15px}.stat-value{font-size:21px}.topbar{padding:12px}.brand-title{font-size:16px}.job-info{grid-template-columns:1fr}.admin-header{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div class="app">
+<section id="customerLoginPage" class="page active"><div class="login-wrap"><div class="login-card glass">
+<img id="loginLogo" class="login-logo" src="" alt="Logo">
+<div id="loginSiteName" class="login-title">FLAME SHOP</div>
+<div id="loginSiteDescription" class="login-subtitle">ระบบติดตามสถานะงานของลูกค้า</div>
+<form id="customerLoginForm">
+<div class="mb-3"><label class="form-label">ชื่อลูกค้า</label><input type="text" id="customerName" class="form-control" placeholder="กรอกชื่อที่แจ้งไว้กับร้าน" required></div>
+<div class="mb-3"><label class="form-label">รหัสลูกค้า</label><input type="text" id="customerCode" class="form-control" placeholder="เช่น FLAME01" required></div>
+<button type="submit" class="btn-main btn-green w-100"><i class="bi bi-box-arrow-in-right"></i> เข้าสู่ระบบ</button>
+</form>
+<div class="text-center mt-4"><button class="btn btn-link text-secondary text-decoration-none" onclick="showAdminLogin()"><i class="bi bi-shield-lock"></i> เข้าสู่ระบบแอดมิน</button></div>
+</div></div></section>
+
+<section id="customerApp" class="page">
+<div class="topbar glass"><div class="brand"><img id="customerLogo" src="" alt="Logo"><div class="brand-text"><div id="customerSiteName" class="brand-title">FLAME SHOP</div><div id="customerSiteDescription" class="brand-desc">ระบบติดตามสถานะงาน</div></div></div><button class="btn btn-dark-custom btn-sm" onclick="customerLogout()"><i class="bi bi-box-arrow-right"></i> ออกจากระบบ</button></div>
+<div class="mb-4"><div class="text-secondary small">ยินดีต้อนรับ</div><div id="customerDisplayName" style="font-size:28px;font-weight:700">-</div></div>
+<div class="stats-grid">
+<div class="stat"><div class="stat-icon"><i class="bi bi-briefcase"></i></div><div id="customerTotal" class="stat-value">0</div><div class="stat-label">งานทั้งหมด</div></div>
+<div class="stat"><div class="stat-icon"><i class="bi bi-hourglass-split"></i></div><div id="customerPending" class="stat-value">0</div><div class="stat-label">รอดำเนินการ</div></div>
+<div class="stat"><div class="stat-icon"><i class="bi bi-arrow-repeat"></i></div><div id="customerProgress" class="stat-value">0</div><div class="stat-label">กำลังทำ</div></div>
+<div class="stat"><div class="stat-icon"><i class="bi bi-check-circle"></i></div><div id="customerDone" class="stat-value">0</div><div class="stat-label">เสร็จแล้ว</div></div>
+</div>
+<div class="glass p-3 p-md-4"><div class="section-head"><div class="section-title">งานของฉัน</div><select id="customerFilter" class="form-select" style="width:auto" onchange="renderCustomerJobs()"><option value="ALL">ทั้งหมด</option><option value="PENDING">ยังไม่เริ่ม</option><option value="PROGRESS">กำลังดำเนินการ</option><option value="DONE">เสร็จแล้ว</option><option value="CANCEL">ยกเลิก</option></select></div><div id="customerJobsContainer" class="jobs-grid"></div></div>
+</section>
+
+<section id="adminLoginPage" class="page"><div class="login-wrap"><div class="login-card glass">
+<img id="adminLoginLogo" class="login-logo" src="" alt="Logo"><div class="login-title">Admin</div><div class="login-subtitle">FLAME SHOP Management</div>
+<form id="adminLoginForm"><div class="mb-3"><label class="form-label">อีเมล</label><input type="email" id="adminEmail" class="form-control" placeholder="admin@example.com" required></div><div class="mb-3"><label class="form-label">รหัสผ่าน</label><input type="password" id="adminPassword" class="form-control" placeholder="••••••••" required></div><button type="submit" class="btn-main w-100"><i class="bi bi-shield-lock"></i> เข้าสู่ระบบ Admin</button></form>
+<div class="text-center mt-3"><button class="btn btn-link text-secondary text-decoration-none" onclick="showCustomerLogin()">← กลับหน้าลูกค้า</button></div>
+</div></div></section>
+
+<section id="adminApp" class="page">
+<div class="admin-header glass"><div><div class="admin-title"><i class="bi bi-speedometer2"></i> Admin Dashboard</div><div id="adminUserDisplay" class="admin-user">-</div></div><button class="btn btn-dark-custom" onclick="adminLogout()"><i class="bi bi-box-arrow-right"></i> ออกจากระบบ</button></div>
+<div class="stats-grid">
+<div class="stat"><div class="stat-icon"><i class="bi bi-people"></i></div><div id="adminCustomerCount" class="stat-value">0</div><div class="stat-label">ลูกค้าทั้งหมด</div></div>
+<div class="stat"><div class="stat-icon"><i class="bi bi-briefcase"></i></div><div id="adminJobCount" class="stat-value">0</div><div class="stat-label">งานทั้งหมด</div></div>
+<div class="stat"><div class="stat-icon"><i class="bi bi-arrow-repeat"></i></div><div id="adminProgressCount" class="stat-value">0</div><div class="stat-label">กำลังทำ</div></div>
+<div class="stat"><div class="stat-icon"><i class="bi bi-check-circle"></i></div><div id="adminDoneCount" class="stat-value">0</div><div class="stat-label">เสร็จแล้ว</div></div>
+</div>
+<div class="tabs glass">
+<button class="tab-btn active" data-tab="customers" onclick="switchAdminTab('customers')"><i class="bi bi-people"></i> ลูกค้า</button>
+<button class="tab-btn" data-tab="jobs" onclick="switchAdminTab('jobs')"><i class="bi bi-briefcase"></i> งาน</button>
+<button class="tab-btn" data-tab="settings" onclick="switchAdminTab('settings')"><i class="bi bi-gear"></i> ตั้งค่าเว็บไซต์</button>
+</div>
+
+<div id="adminCustomersPanel" class="admin-panel active"><div class="glass p-3 p-md-4"><div class="toolbar"><div><div class="section-title">ลูกค้า</div><div class="text-secondary small">จัดการข้อมูลลูกค้า</div></div><button class="btn-main btn-green" onclick="openCustomerModal()"><i class="bi bi-plus-lg"></i> เพิ่มลูกค้า</button></div><div class="table-wrap"><table class="table"><thead><tr><th>ชื่อ</th><th>รหัสลูกค้า</th><th>โทรศัพท์</th><th>หมายเหตุ</th><th>จัดการ</th></tr></thead><tbody id="customersTableBody"></tbody></table></div></div></div>
+
+<div id="adminJobsPanel" class="admin-panel"><div class="glass p-3 p-md-4"><div class="toolbar"><div><div class="section-title">งานทั้งหมด</div><div class="text-secondary small">เพิ่มและแก้ไขสถานะงานของลูกค้า</div></div><button class="btn-main btn-green" onclick="openJobModal()"><i class="bi bi-plus-lg"></i> เพิ่มงาน</button></div><div class="mb-3"><input id="adminJobSearch" class="form-control" placeholder="ค้นหางาน / ชื่อลูกค้า..." oninput="renderAdminJobs()"></div><div class="table-wrap"><table class="table"><thead><tr><th>งาน</th><th>ลูกค้า</th><th>สถานะ</th><th>ความคืบหน้า</th><th>กำหนดส่ง</th><th>จัดการ</th></tr></thead><tbody id="jobsTableBody"></tbody></table></div></div></div>
+
+<div id="adminSettingsPanel" class="admin-panel"><div class="glass p-3 p-md-4"><div class="section-title mb-1">ตั้งค่าเว็บไซต์</div><div class="text-secondary small mb-4">เปลี่ยนโลโก้ ชื่อเว็บไซต์ และรายละเอียด</div>
+<form id="settingsForm">
+<div class="mb-3"><label class="form-label">URL โลโก้</label><input id="settingLogo" class="form-control" placeholder="https://example.com/logo.png"></div>
+<div class="mb-3"><label class="form-label">ชื่อเว็บไซต์</label><input id="settingSiteName" class="form-control"></div>
+<div class="mb-3"><label class="form-label">คำอธิบายเว็บไซต์</label><textarea id="settingSiteDescription" class="form-control"></textarea></div>
+<div class="mb-4"><label class="form-label">URL Favicon</label><input id="settingFavicon" class="form-control" placeholder="https://example.com/favicon.png"></div>
+<button type="submit" class="btn-main btn-green"><i class="bi bi-save"></i> บันทึกการตั้งค่า</button>
+</form></div></div>
+</section>
+</div>
+
+<div class="modal fade" id="customerModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title"><i class="bi bi-person"></i> <span id="customerModalTitle">เพิ่มลูกค้า</span></h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+<form id="customerForm"><div class="modal-body"><input type="hidden" id="editCustomerId"><div class="mb-3"><label class="form-label">ชื่อลูกค้า *</label><input id="customerFormName" class="form-control" required></div><div class="mb-3"><label class="form-label">รหัสลูกค้า *</label><input id="customerFormCode" class="form-control" placeholder="FLAME01" required></div><div class="mb-3"><label class="form-label">เบอร์โทรศัพท์</label><input id="customerFormPhone" class="form-control"></div><div><label class="form-label">หมายเหตุ</label><textarea id="customerFormNote" class="form-control"></textarea></div></div><div class="modal-footer"><button type="button" class="btn btn-dark" data-bs-dismiss="modal">ยกเลิก</button><button type="submit" class="btn-main btn-green">บันทึก</button></div></form></div></div></div>
+
+<div class="modal fade" id="jobModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title"><i class="bi bi-briefcase"></i> <span id="jobModalTitle">เพิ่มงาน</span></h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+<form id="jobForm"><div class="modal-body"><input type="hidden" id="editJobId"><div class="row g-3">
+<div class="col-md-6"><label class="form-label">ลูกค้า *</label><select id="jobCustomer" class="form-select" required></select></div>
+<div class="col-md-6"><label class="form-label">ชื่องาน *</label><input id="jobName" class="form-control" required></div>
+<div class="col-12"><label class="form-label">รายละเอียดงาน</label><textarea id="jobDescription" class="form-control"></textarea></div>
+<div class="col-md-4"><label class="form-label">วันที่เริ่ม</label><input type="date" id="jobStartDate" class="form-control"></div>
+<div class="col-md-4"><label class="form-label">กำหนดส่ง</label><input type="date" id="jobDeadline" class="form-control"></div>
+<div class="col-md-4"><label class="form-label">ราคา</label><input type="number" id="jobPrice" class="form-control" min="0" step="0.01"></div>
+<div class="col-md-6"><label class="form-label">สถานะ</label><select id="jobStatus" class="form-select"><option value="PENDING">ยังไม่เริ่ม</option><option value="PROGRESS">กำลังดำเนินการ</option><option value="DONE">เสร็จแล้ว</option><option value="CANCEL">ยกเลิก</option></select></div>
+<div class="col-md-6"><label class="form-label">ความคืบหน้า (%)</label><input type="number" id="jobProgress" class="form-control" min="0" max="100" value="0"></div>
+<div class="col-12"><label class="form-label">ลิงก์ไฟล์งาน</label><input type="url" id="jobFileUrl" class="form-control" placeholder="https://..."></div>
+<div class="col-12"><label class="form-label">หมายเหตุ</label><textarea id="jobNote" class="form-control"></textarea></div>
+</div></div><div class="modal-footer"><button type="button" class="btn btn-dark" data-bs-dismiss="modal">ยกเลิก</button><button type="submit" class="btn-main btn-green"><i class="bi bi-save"></i> บันทึกงาน</button></div></form>
+</div></div></div>
+
+<div class="toast-container"><div id="toast" class="toast-custom" style="display:none"><i id="toastIcon" class="bi bi-check-circle"></i> <span id="toastText">สำเร็จ</span></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const SUPABASE_URL="https://itpgcbkypwjlawtshozr.supabase.co";
+const SUPABASE_KEY="sb_publishable_7hrnbZRTZ1mTDmwyp793tw_jWjsDBwi";
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let currentCustomer=null,currentAdminUser=null,customerJobs=[],customers=[],jobs=[],customerModal,jobModal;
+const DEFAULT_LOGO="https://i.postimg.cc/ZqwL8RKR/Untitled-design.png";
+const DEFAULT_SITE_NAME="FLAME SHOP";
+const DEFAULT_SITE_DESCRIPTION="ระบบติดตามสถานะงานของลูกค้า";
+
+document.addEventListener("DOMContentLoaded",async()=>{
+ customerModal=new bootstrap.Modal(document.getElementById("customerModal"));
+ jobModal=new bootstrap.Modal(document.getElementById("jobModal"));
+ await loadSiteSettings();
+ document.getElementById("customerLoginForm").addEventListener("submit",customerLogin);
+ document.getElementById("adminLoginForm").addEventListener("submit",adminLogin);
+ document.getElementById("customerForm").addEventListener("submit",saveCustomer);
+ document.getElementById("jobForm").addEventListener("submit",saveJob);
+ document.getElementById("settingsForm").addEventListener("submit",saveSiteSettings);
+ await checkExistingAdminSession();
+});
+
+function showPage(id){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById(id).classList.add("active")}
+function showCustomerLogin(){showPage("customerLoginPage")}
+function showAdminLogin(){showPage("adminLoginPage")}
+function toast(message,type="success"){const box=document.getElementById("toast"),icon=document.getElementById("toastIcon"),text=document.getElementById("toastText");text.textContent=message;icon.className=type==="error"?"bi bi-x-circle text-danger":"bi bi-check-circle text-success";box.style.display="block";setTimeout(()=>box.style.display="none",3000)}
+
+async function loadSiteSettings(){
+ try{
+  const {data,error}=await supabaseClient.from("site_settings").select("*").eq("id",1).maybeSingle();
+  if(error){console.error(error);return}
+  const s=data||{},logo=s.logo_url||DEFAULT_LOGO,name=s.site_name||DEFAULT_SITE_NAME,desc=s.site_description||DEFAULT_SITE_DESCRIPTION;
+  ["loginLogo","adminLoginLogo","customerLogo"].forEach(id=>document.getElementById(id).src=logo);
+  document.getElementById("loginSiteName").textContent=name;
+  document.getElementById("loginSiteDescription").textContent=desc;
+  document.getElementById("customerSiteName").textContent=name;
+  document.getElementById("customerSiteDescription").textContent=desc;
+  document.title=name+" - ระบบส่งงานลูกค้า";
+  if(s.favicon_url)document.getElementById("favicon").href=s.favicon_url;
+  document.getElementById("settingLogo").value=s.logo_url||"";
+  document.getElementById("settingSiteName").value=s.site_name||"";
+  document.getElementById("settingSiteDescription").value=s.site_description||"";
+  document.getElementById("settingFavicon").value=s.favicon_url||"";
+ }catch(e){console.error(e)}
+}
+
+async function customerLogin(e){
+ e.preventDefault();
+ const name=document.getElementById("customerName").value.trim(),code=document.getElementById("customerCode").value.trim();
+ if(!name||!code)return toast("กรุณากรอกข้อมูลให้ครบ","error");
+ try{
+  const {data,error}=await supabaseClient.rpc("customer_login",{p_name:name,p_customer_code:code});
+  if(error)return toast(error.message,"error");
+  if(!data||data.success!==true)return toast("ชื่อหรือรหัสลูกค้าไม่ถูกต้อง","error");
+  currentCustomer=data.customer;
+  await loadCustomerJobs();
+  document.getElementById("customerDisplayName").textContent=currentCustomer.name;
+  showPage("customerApp");toast("เข้าสู่ระบบสำเร็จ");
+ }catch(err){console.error(err);toast("เกิดข้อผิดพลาดในการเข้าสู่ระบบ","error")}
+}
+
+async function loadCustomerJobs(){
+ if(!currentCustomer)return;
+ const {data,error}=await supabaseClient.rpc("customer_jobs",{p_customer_id:currentCustomer.id});
+ if(error){console.error(error);return toast(error.message,"error")}
+ customerJobs=Array.isArray(data)?data:[];
+ renderCustomerStats();renderCustomerJobs();
+}
+function renderCustomerStats(){
+ const total=customerJobs.length,pending=customerJobs.filter(x=>x.status==="PENDING").length,progress=customerJobs.filter(x=>x.status==="PROGRESS").length,done=customerJobs.filter(x=>x.status==="DONE").length;
+ document.getElementById("customerTotal").textContent=total;document.getElementById("customerPending").textContent=pending;document.getElementById("customerProgress").textContent=progress;document.getElementById("customerDone").textContent=done;
+}
+function renderCustomerJobs(){
+ const c=document.getElementById("customerJobsContainer"),filter=document.getElementById("customerFilter").value;
+ let list=filter==="ALL"?customerJobs:customerJobs.filter(j=>j.status===filter);
+ if(!list.length){c.innerHTML='<div class="empty" style="grid-column:1/-1"><i class="bi bi-briefcase"></i>ยังไม่มีงานในรายการ</div>';return}
+ c.innerHTML=list.map(job=>{const st=getStatus(job.status);return `<div class="job-card"><div class="job-top"><div><div class="job-title">${escapeHtml(job.name||"-")}</div><div class="job-description">${escapeHtml(job.description||"ไม่มีรายละเอียด")}</div></div><span class="badge-status ${st.class}">${st.text}</span></div><div class="mt-4"><div class="d-flex justify-content-between mb-2"><span class="text-secondary small">ความคืบหน้า</span><span class="small">${job.progress||0}%</span></div><div class="progress"><div class="progress-bar" style="width:${job.progress||0}%"></div></div></div><div class="job-info"><div class="info-box"><div class="info-label">วันที่เริ่ม</div><div class="info-value">${formatDate(job.start_date)}</div></div><div class="info-box"><div class="info-label">กำหนดส่ง</div><div class="info-value">${formatDate(job.deadline)}</div></div><div class="info-box"><div class="info-label">ราคา</div><div class="info-value">${formatMoney(job.price)}</div></div><div class="info-box"><div class="info-label">อัปเดตล่าสุด</div><div class="info-value">${formatDateTime(job.updated_at)}</div></div></div>${job.note?`<div class="mt-3 p-3 rounded-3" style="background:#171717"><div class="text-secondary small">หมายเหตุ</div><div class="small mt-1">${escapeHtml(job.note)}</div></div>`:""}${job.file_url?`<a href="${escapeAttribute(job.file_url)}" target="_blank" rel="noopener" class="btn-main w-100 d-block text-center mt-3" style="text-decoration:none"><i class="bi bi-file-earmark-arrow-down"></i> เปิดไฟล์งาน</a>`:""}</div>`}).join("")
+}
+function customerLogout(){currentCustomer=null;customerJobs=[];document.getElementById("customerLoginForm").reset();showCustomerLogin()}
+
+async function adminLogin(e){
+ e.preventDefault();
+ const email=document.getElementById("adminEmail").value.trim(),password=document.getElementById("adminPassword").value;
+ if(!email||!password)return toast("กรุณากรอกอีเมลและรหัสผ่าน","error");
+ try{
+  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+  if(error)return toast(error.message,"error");
+  currentAdminUser=data.user;
+  if(!(await checkIsAdmin())){await supabaseClient.auth.signOut();currentAdminUser=null;return toast("บัญชีนี้ไม่มีสิทธิ์ Admin","error")}
+  await openAdminDashboard();
+ }catch(err){console.error(err);toast("ไม่สามารถเข้าสู่ระบบ Admin ได้","error")}
+}
+async function checkIsAdmin(){
+ const {data,error}=await supabaseClient.rpc("is_admin");
+ if(error){console.error("is_admin error:",error);return false}
+ return data===true;
+}
+async function checkExistingAdminSession(){
+ const {data}=await supabaseClient.auth.getSession(),session=data?.session;
+ if(!session)return;
+ currentAdminUser=session.user;
+ if(await checkIsAdmin())await openAdminDashboard();else{await supabaseClient.auth.signOut();currentAdminUser=null}
+}
+async function openAdminDashboard(){
+ if(!currentAdminUser){const {data}=await supabaseClient.auth.getUser();currentAdminUser=data?.user}
+ if(!(await checkIsAdmin()))return toast("บัญชีนี้ไม่มีสิทธิ์ Admin","error");
+ document.getElementById("adminUserDisplay").textContent=currentAdminUser?.email||"Admin";
+ showPage("adminApp");await loadAdminData();
+}
+async function loadAdminData(){await Promise.all([loadCustomers(),loadJobs()]);renderAdminStats();renderAdminCustomers();renderAdminJobs()}
+async function loadCustomers(){
+ const {data,error}=await supabaseClient.from("customers").select("*").order("created_at",{ascending:false});
+ if(error){console.error(error);return toast(error.message,"error")}customers=data||[];
+}
+async function loadJobs(){
+ const {data,error}=await supabaseClient.from("jobs").select("*,customers(id,name,customer_code)").order("created_at",{ascending:false});
+ if(error){console.error(error);return toast(error.message,"error")}jobs=data||[];
+}
+function renderAdminStats(){
+ document.getElementById("adminCustomerCount").textContent=customers.length;
+ document.getElementById("adminJobCount").textContent=jobs.length;
+ document.getElementById("adminProgressCount").textContent=jobs.filter(x=>x.status==="PROGRESS").length;
+ document.getElementById("adminDoneCount").textContent=jobs.filter(x=>x.status==="DONE").length;
+}
+function renderAdminCustomers(){
+ const tbody=document.getElementById("customersTableBody");
+ if(!customers.length){tbody.innerHTML='<tr><td colspan="5"><div class="empty"><i class="bi bi-people"></i>ยังไม่มีข้อมูลลูกค้า</div></td></tr>';return}
+ tbody.innerHTML=customers.map(c=>`<tr><td><strong>${escapeHtml(c.name)}</strong></td><td><span class="badge-status status-progress">${escapeHtml(c.customer_code)}</span></td><td>${escapeHtml(c.phone||"-")}</td><td>${escapeHtml(c.note||"-")}</td><td><div class="d-flex gap-1"><button class="btn-sm-custom btn-dark-custom" onclick="editCustomer('${c.id}')"><i class="bi bi-pencil"></i></button><button class="btn-sm-custom btn-danger-custom" onclick="deleteCustomer('${c.id}')"><i class="bi bi-trash"></i></button></div></td></tr>`).join("")
+}
+function openCustomerModal(id=null){
+ document.getElementById("customerForm").reset();document.getElementById("editCustomerId").value="";document.getElementById("customerModalTitle").textContent=id?"แก้ไขลูกค้า":"เพิ่มลูกค้า";
+ if(id){const c=customers.find(x=>x.id===id);if(!c)return;document.getElementById("editCustomerId").value=c.id;document.getElementById("customerFormName").value=c.name||"";document.getElementById("customerFormCode").value=c.customer_code||"";document.getElementById("customerFormPhone").value=c.phone||"";document.getElementById("customerFormNote").value=c.note||""}
+ customerModal.show();
+}
+function editCustomer(id){openCustomerModal(id)}
+async function saveCustomer(e){
+ e.preventDefault();const id=document.getElementById("editCustomerId").value,payload={name:document.getElementById("customerFormName").value.trim(),customer_code:document.getElementById("customerFormCode").value.trim(),phone:document.getElementById("customerFormPhone").value.trim()||null,note:document.getElementById("customerFormNote").value.trim()||null};
+ const result=id?await supabaseClient.from("customers").update(payload).eq("id",id):await supabaseClient.from("customers").insert(payload);
+ if(result.error){console.error(result.error);return toast(result.error.message,"error")}
+ customerModal.hide();toast(id?"แก้ไขข้อมูลลูกค้าแล้ว":"เพิ่มลูกค้าแล้ว");await loadCustomers();await loadJobs();renderAdminStats();renderAdminCustomers();renderAdminJobs();
+}
+async function deleteCustomer(id){
+ if(!confirm("ต้องการลบลูกค้ารายนี้หรือไม่?\nงานของลูกค้ารายนี้จะถูกลบด้วย"))return;
+ const {error}=await supabaseClient.from("customers").delete().eq("id",id);
+ if(error){console.error(error);return toast(error.message,"error")}
+ toast("ลบลูกค้าแล้ว");await loadCustomers();await loadJobs();renderAdminStats();renderAdminCustomers();renderAdminJobs();
+}
+function renderAdminJobs(){
+ const tbody=document.getElementById("jobsTableBody"),search=document.getElementById("adminJobSearch").value.toLowerCase().trim();
+ let list=search?jobs.filter(j=>(j.name||"").toLowerCase().includes(search)||(j.customers?.name||"").toLowerCase().includes(search)):jobs;
+ if(!list.length){tbody.innerHTML='<tr><td colspan="6"><div class="empty"><i class="bi bi-briefcase"></i>ไม่พบข้อมูลงาน</div></td></tr>';return}
+ tbody.innerHTML=list.map(job=>{const st=getStatus(job.status);return `<tr><td><strong>${escapeHtml(job.name||"-")}</strong><div class="text-secondary small">${escapeHtml(job.description||"")}</div></td><td>${escapeHtml(job.customers?.name||"-")}<div class="text-secondary small">${escapeHtml(job.customers?.customer_code||"")}</div></td><td><span class="badge-status ${st.class}">${st.text}</span></td><td style="min-width:130px"><div class="small mb-1">${job.progress||0}%</div><div class="progress"><div class="progress-bar" style="width:${job.progress||0}%"></div></div></td><td>${formatDate(job.deadline)}</td><td><div class="d-flex gap-1"><button class="btn-sm-custom btn-dark-custom" onclick="editJob('${job.id}')"><i class="bi bi-pencil"></i></button><button class="btn-sm-custom btn-danger-custom" onclick="deleteJob('${job.id}')"><i class="bi bi-trash"></i></button></div></td></tr>`}).join("")
+}
+function openJobModal(id=null){
+ document.getElementById("jobForm").reset();document.getElementById("editJobId").value="";document.getElementById("jobProgress").value=0;document.getElementById("jobStatus").value="PENDING";document.getElementById("jobModalTitle").textContent=id?"แก้ไขงาน":"เพิ่มงาน";fillCustomerSelect();
+ if(id){const j=jobs.find(x=>x.id===id);if(!j)return;document.getElementById("editJobId").value=j.id;document.getElementById("jobCustomer").value=j.customer_id;document.getElementById("jobName").value=j.name||"";document.getElementById("jobDescription").value=j.description||"";document.getElementById("jobStartDate").value=j.start_date||"";document.getElementById("jobDeadline").value=j.deadline||"";document.getElementById("jobPrice").value=j.price||0;document.getElementById("jobStatus").value=j.status||"PENDING";document.getElementById("jobProgress").value=j.progress||0;document.getElementById("jobFileUrl").value=j.file_url||"";document.getElementById("jobNote").value=j.note||""}
+ jobModal.show();
+}
+function editJob(id){openJobModal(id)}
+function fillCustomerSelect(){
+ const select=document.getElementById("jobCustomer");select.innerHTML='<option value="">-- เลือกลูกค้า --</option>';
+ customers.forEach(c=>select.innerHTML+=`<option value="${c.id}">${escapeHtml(c.name)} — ${escapeHtml(c.customer_code)}</option>`)
+}
+async function saveJob(e){
+ e.preventDefault();const id=document.getElementById("editJobId").value,status=document.getElementById("jobStatus").value;
+ let progress=Math.max(0,Math.min(100,Number(document.getElementById("jobProgress").value)||0));if(status==="DONE")progress=100;
+ const payload={customer_id:document.getElementById("jobCustomer").value,name:document.getElementById("jobName").value.trim(),description:document.getElementById("jobDescription").value.trim()||null,start_date:document.getElementById("jobStartDate").value||null,deadline:document.getElementById("jobDeadline").value||null,price:Number(document.getElementById("jobPrice").value)||0,status,progress,file_url:document.getElementById("jobFileUrl").value.trim()||null,note:document.getElementById("jobNote").value.trim()||null};
+ const result=id?await supabaseClient.from("jobs").update(payload).eq("id",id):await supabaseClient.from("jobs").insert(payload);
+ if(result.error){console.error(result.error);return toast(result.error.message,"error")}
+ jobModal.hide();toast(id?"แก้ไขงานแล้ว":"เพิ่มงานแล้ว");await loadJobs();renderAdminStats();renderAdminJobs();
+}
+async function deleteJob(id){
+ if(!confirm("ต้องการลบงานนี้หรือไม่?"))return;
+ const {error}=await supabaseClient.from("jobs").delete().eq("id",id);
+ if(error){console.error(error);return toast(error.message,"error")}
+ toast("ลบงานแล้ว");await loadJobs();renderAdminStats();renderAdminJobs();
+}
+function switchAdminTab(tab){
+ document.querySelectorAll(".tab-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+ document.querySelectorAll(".admin-panel").forEach(p=>p.classList.remove("active"));
+ document.getElementById("admin"+tab.charAt(0).toUpperCase()+tab.slice(1)+"Panel").classList.add("active");
+}
+async function saveSiteSettings(e){
+ e.preventDefault();
+ const payload={id:1,logo_url:document.getElementById("settingLogo").value.trim()||null,site_name:document.getElementById("settingSiteName").value.trim()||DEFAULT_SITE_NAME,site_description:document.getElementById("settingSiteDescription").value.trim()||DEFAULT_SITE_DESCRIPTION,favicon_url:document.getElementById("settingFavicon").value.trim()||null};
+ const {error}=await supabaseClient.from("site_settings").upsert(payload,{onConflict:"id"});
+ if(error){console.error(error);return toast(error.message,"error")}
+ await loadSiteSettings();toast("บันทึกการตั้งค่าเว็บไซต์แล้ว");
+}
+async function adminLogout(){await supabaseClient.auth.signOut();currentAdminUser=null;showCustomerLogin()}
+function getStatus(s){switch(s){case"PENDING":return{text:"ยังไม่เริ่ม",class:"status-pending"};case"PROGRESS":return{text:"กำลังดำเนินการ",class:"status-progress"};case"DONE":return{text:"เสร็จแล้ว",class:"status-done"};case"CANCEL":return{text:"ยกเลิก",class:"status-cancel"};default:return{text:s||"-",class:"status-pending"}}}
+function formatDate(date){if(!date)return"-";const d=new Date(date);if(isNaN(d))return date;return d.toLocaleDateString("th-TH",{year:"numeric",month:"short",day:"numeric"})}
+function formatDateTime(date){if(!date)return"-";const d=new Date(date);if(isNaN(d))return date;return d.toLocaleString("th-TH",{year:"numeric",month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})}
+function formatMoney(v){if(v===null||v===undefined||v==="")return"-";return Number(v).toLocaleString("th-TH",{minimumFractionDigits:2,maximumFractionDigits:2})+" ฿"}
+function escapeHtml(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+function escapeAttribute(v){return String(v??"").replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;")}
+</script>
+</body>
+</html>
