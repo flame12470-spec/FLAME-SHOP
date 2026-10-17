@@ -140,6 +140,36 @@ nav a.on{color:#fff;background:#1c1c22;box-shadow:inset 0 -2px 0 var(--red)}
 .big{font-size:clamp(54px,15vw,210px);font-weight:700;line-height:.95;letter-spacing:-.04em;text-align:center;-webkit-text-stroke:1px #33333b;color:transparent;transition:.4s;user-select:none;margin-bottom:26px;overflow:hidden}
 .big:hover{color:var(--red);-webkit-text-stroke-color:var(--red)}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.rv{opacity:1!important;translate:none!important}#pre{display:none}}
+/* ===== responsive / กันเลื่อนข้าง ===== */
+html{overflow-x:hidden;-webkit-text-size-adjust:100%}
+html,body{max-width:100%}body{overflow-x:clip;min-width:320px}
+img,canvas,svg{max-width:100%}
+.hg>*,.grid>*,.cols>*{min-width:0}
+.mqw{overflow:hidden;padding:12px 0}
+.mq.r{transform:rotate(-1.6deg) scale(1.08);margin:0}
+.hero h1{font-size:clamp(30px,8.4vw,90px);overflow-wrap:anywhere}
+.big{font-size:clamp(40px,13.5vw,210px)}
+.br span{min-width:0;flex:1}
+.cr span:first-child{min-width:0;overflow-wrap:anywhere}
+.rf{grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr))}
+.mbox{max-width:100%}
+@supports(height:1dvh){.mbox{max-height:calc(100dvh - 28px)}}
+@media(min-width:1600px){.wrap{max-width:1360px}}
+@media(max-width:900px){.hero p{max-width:none}.con{max-width:560px}}
+@media(max-width:560px){
+ .wrap{padding:0 16px}
+ .nav{padding:8px 16px}
+ .rf{grid-template-columns:1fr!important}
+ .stats{grid-template-columns:repeat(3,1fr)}
+ .cta .btn{flex:1 1 100%;text-align:center}
+ .pill{font-size:12px;padding:5px 12px}
+ .mbox{padding:18px 14px;border-radius:18px}
+ .tabs button{padding:6px 12px}
+ details{padding:12px 14px}
+ .card{padding:16px}
+}
+@media(max-width:360px){.stats{grid-template-columns:repeat(2,1fr)}h2{font-size:24px}}
+@media(max-height:520px) and (orientation:landscape){.hero{padding:36px 0 56px}}
 </style>
 </head>
 <body><div id="sp"></div><div id="pre"><b>Web<span>Craft</span></b><i></i></div><canvas id="fx"></canvas><i id="dot"></i><i id="ring"></i>
@@ -246,7 +276,7 @@ document.addEventListener('change',async ev=>{if(ev.target.id==='nd'){const {err
 addEventListener('keydown',ev=>{if(ev.key==='Escape')close();if(ev.key==='Enter'&&ev.target.id==='pw')document.querySelector('[data-a=login]').click();});
 $('#yr').textContent=new Date().getFullYear()+543;
 /* ===== ลูกเล่น ===== */
-const mq=(a,c='')=>`<div class="mq ${c}"><div>${[...a,...a,...a,...a].map(x=>`<span>${x}</span>`).join('')}</div></div>`;
+const mq=(a,c='')=>`<div class="mqw"><div class="mq ${c}"><div>${[...a,...a,...a,...a].map(x=>`<span>${x}</span>`).join('')}</div></div></div>`;
 const calm=matchMedia('(prefers-reduced-motion:reduce)').matches,fine=matchMedia('(pointer:fine)').matches&&!calm;
 const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}}),{threshold:.12});
 function fx(){
