@@ -2,452 +2,243 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>โปรไฟล์บริษัท</title>
-<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0a0909">
+<title>FLAME SHOP — Web Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--main:#1d4fd8;--dark:#0c1a3d;--mute:#5b6783;--bg:#f6f8fc;--line:#e3e8f3;--sh:0 12px 34px -14px rgba(18,49,143,.35)}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;font:400 16px/1.65 Anuphan,sans-serif;color:var(--dark);background:#fff;-webkit-font-smoothing:antialiased}
-img{max-width:100%;display:block}
-a{color:inherit}
-button,input,textarea{font:inherit}
-[hidden]{display:none!important}
-.wrap{max-width:1160px;margin:auto;padding:0 20px}
-section{padding:72px 0}
-.alt{background:var(--bg)}
-h2.t{margin:0 0 36px;text-align:center;font-size:clamp(24px,4vw,38px);color:var(--main)}
-.btn{display:inline-block;border:0;border-radius:999px;background:var(--main);color:#fff;padding:10px 24px;font-weight:600;text-decoration:none;cursor:pointer}
-.btn.line{background:transparent;border:2px solid #fff}
-.btn.sm{padding:6px 14px;font-size:14px}
-.btn.red{background:#dc2626}
-.btn.gray{background:#e5e9f2;color:var(--dark)}
-/* nav */
-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 20px;max-width:1160px;margin:auto}
-.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;color:var(--main);text-decoration:none}
-.brand img{height:38px;width:auto}
-nav{display:flex;gap:4px;flex-wrap:wrap}
-nav a{padding:6px 14px;border-radius:999px;text-decoration:none;color:var(--mute);font-weight:500;font-size:15px}
-nav a:hover{background:var(--bg);color:var(--main)}
-/* hero */
-.hero{position:relative;color:#fff;text-align:center;padding:clamp(80px,14vw,150px) 20px;background:linear-gradient(135deg,var(--dark),var(--main)) center/cover}
-.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(12,26,61,.85),color-mix(in srgb,var(--main) 70%,transparent))}
-.hero>*{position:relative}
-.hero h1{margin:0;font-size:clamp(30px,6vw,64px);line-height:1.15}
-.hero p{max-width:720px;margin:16px auto 28px;font-size:clamp(15px,2vw,20px);opacity:.95}
-.hero .btn{margin:4px}
-.hero .btn:not(.line){background:#fff;color:var(--main)}
-/* about */
-.about{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
-.about img{border-radius:24px;box-shadow:var(--sh);width:100%;aspect-ratio:4/3;object-fit:cover}
-.about p{white-space:pre-line;color:#2b3656;margin:0 0 18px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:14px}
-.stat{background:var(--bg);border-radius:18px;padding:14px;text-align:center}
-.stat b{display:block;font-size:28px;color:var(--main)}
-.stat span{font-size:13px;color:var(--mute)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px}
-.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px;box-shadow:var(--sh)}
-.card .ic{width:54px;height:54px;border-radius:16px;background:color-mix(in srgb,var(--main) 12%,#fff);display:grid;place-items:center;font-size:28px;margin-bottom:14px}
-.card h3{margin:0 0 6px;font-size:20px}
-.card p{margin:0;color:var(--mute)}
-.tm{text-align:center;padding:0;overflow:hidden}
-.tm .ph{aspect-ratio:1/1;background:linear-gradient(160deg,var(--main),#4db3f5);display:grid;place-items:center;color:#fff;font-size:56px;font-weight:700}
-.tm img{aspect-ratio:1/1;width:100%;object-fit:cover;object-position:center top}
-.tm div.b{padding:16px}
-.tm h3{margin:0;font-size:18px}
-.tm small{color:var(--main);font-weight:600}
-.contact{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
-.contact .card{text-align:center}
-footer{background:var(--dark);color:#fff;padding:26px 0;text-align:center;font-size:14px}
-footer a{opacity:.8}
-.empty{text-align:center;color:var(--mute);padding:30px}
-@media(max-width:760px){.about{grid-template-columns:1fr}nav a{padding:6px 10px;font-size:14px}section{padding:52px 0}}
-/* admin */
-.adm{min-height:100vh;background:var(--bg)}
-.adm-top{background:var(--dark);color:#fff;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.adm-top b{font-size:18px}
-.tabs{display:flex;gap:6px;flex-wrap:wrap;padding:16px 20px 0;max-width:1000px;margin:auto}
-.tabs button{border:0;background:#fff;border-radius:999px;padding:8px 18px;font-weight:600;color:var(--mute);cursor:pointer;box-shadow:0 2px 8px rgba(18,49,143,.08)}
-.tabs button.on{background:var(--main);color:#fff}
-.panel{max-width:1000px;margin:16px auto;padding:0 20px 60px}
-.box{background:#fff;border-radius:20px;padding:22px;box-shadow:var(--sh);margin-bottom:18px}
-.box h3{margin:0 0 14px;font-size:18px;color:var(--main)}
-label{display:block;font-size:13px;font-weight:600;color:var(--mute);margin:12px 0 4px}
-input[type=text],input[type=password],input[type=color],textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:9px 12px;background:#fff;color:var(--dark)}
-input[type=color]{padding:2px;height:42px}
-textarea{min-height:90px;resize:vertical}
-.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.item{border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;background:#fcfdff}
-.item .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-weight:600}
-.imgrow{display:flex;gap:10px;align-items:center;margin-top:6px;flex-wrap:wrap}
-.imgrow img{height:54px;width:54px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
-.login{max-width:380px;margin:12vh auto;padding:0 20px}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#16a34a;color:#fff;padding:8px 20px;border-radius:999px;font-weight:600;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none}
-.toast.show{opacity:1}
-.note{font-size:13px;color:var(--mute);margin:8px 0 0}
-/* ================= FX: ลูกเล่นทั้งเว็บ ================= */
-:root{--grad:linear-gradient(120deg,var(--main),#4db3f5,#a855f7)}
-html{scroll-padding-top:72px}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes fup{from{opacity:0;transform:translateY(26px)}}
-@keyframes pop{from{opacity:0;transform:scale(.85) translateY(20px)}}
-@keyframes blob{to{transform:translate(8vw,6vh) scale(1.25)}}
-@keyframes float{50%{transform:translateY(-6px)}}
-@keyframes gs{to{background-position:200% 0}}
-@keyframes wheel{0%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,14px)}}
-@keyframes rp{to{transform:scale(4);opacity:0}}
-@keyframes wv{to{transform:translateX(-50%)}}
-/* preloader + แถบความคืบหน้า + ปุ่มขึ้นบน + แสงตามเมาส์ */
-.pre{position:fixed;inset:0;z-index:999;background:var(--dark);display:grid;place-items:center;transition:opacity .6s,visibility .6s}
-.pre.out{opacity:0;visibility:hidden}
-.pre i{width:54px;height:54px;border-radius:50%;border:4px solid rgba(255,255,255,.2);border-top-color:#fff;animation:spin .8s linear infinite}
-.prog{position:fixed;top:0;left:0;height:4px;width:100%;transform-origin:0 50%;transform:scaleX(0);background:var(--grad);z-index:300}
-.top{position:fixed;right:20px;bottom:24px;width:48px;height:48px;border-radius:50%;border:0;background:var(--main);color:#fff;font-size:22px;cursor:pointer;box-shadow:0 12px 26px -8px color-mix(in srgb,var(--main) 70%,transparent);opacity:0;transform:translateY(20px) scale(.6);pointer-events:none;transition:opacity .3s,transform .4s cubic-bezier(.3,1.6,.5,1);z-index:90}
-.top.show{opacity:1;transform:none;pointer-events:auto}
-.top:hover{transform:translateY(-4px)}
-.cg{position:fixed;left:0;top:0;width:340px;height:340px;margin:-170px 0 0 -170px;border-radius:50%;pointer-events:none;z-index:2;background:radial-gradient(circle,color-mix(in srgb,var(--main) 22%,transparent),transparent 65%);mix-blend-mode:multiply;transition:opacity .4s}
-/* header */
-header{transition:box-shadow .3s,background .3s}
-header.sc{box-shadow:0 10px 30px -12px rgba(12,26,61,.3);background:rgba(255,255,255,.97)}
-.nav{transition:padding .3s}
-header.sc .nav{padding-top:5px;padding-bottom:5px}
-nav a{transition:color .25s,background .25s}
-nav a.on{color:var(--main);background:color-mix(in srgb,var(--main) 10%,#fff);font-weight:700}
-.brand img{transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
-.brand:hover img{transform:rotate(-8deg) scale(1.12)}
-/* hero */
-.hero{overflow:hidden;padding:clamp(90px,15vw,170px) 20px clamp(130px,17vw,210px)}
-.hero>*{z-index:1}
-.hero>canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
-.blob{position:absolute!important;border-radius:50%;filter:blur(60px);opacity:.5;z-index:0!important;pointer-events:none;animation:blob 14s ease-in-out infinite alternate}
-.blob.b1{width:min(42vw,520px);height:min(42vw,520px);left:-8%;top:-14%;background:#4db3f5}
-.blob.b2{width:min(38vw,460px);height:min(38vw,460px);right:-10%;bottom:6%;background:#a855f7;animation-duration:18s;animation-delay:-5s}
-.blob.b3{width:min(26vw,320px);height:min(26vw,320px);left:40%;top:30%;background:#22d3ee;opacity:.3;animation-duration:22s;animation-delay:-9s}
-.hero h1,.hero p{translate:0 var(--py,0px);text-shadow:0 10px 40px rgba(0,0,0,.25)}
-.hero h1 .w{display:inline-block;overflow:hidden;vertical-align:bottom;padding:.08em .04em}
-.hero h1 .w>span{display:inline-block;animation:wup .95s cubic-bezier(.2,.9,.3,1) backwards;animation-delay:calc(var(--i)*.14s + .35s)}
-@keyframes wup{from{transform:translateY(115%) rotate(4deg)}}
-.hero p{animation:fup .9s .9s backwards}
-.hero .btn{animation:fup .9s 1.1s backwards}
-.hero .btn+.btn{animation-delay:1.25s}
-.mouse{position:absolute!important;bottom:clamp(80px,10vw,130px);left:50%;width:26px;height:42px;border:2px solid rgba(255,255,255,.7);border-radius:20px;margin-left:-13px}
-.mouse::after{content:"";position:absolute;left:50%;top:8px;width:4px;height:8px;border-radius:4px;background:#fff;animation:wheel 1.6s infinite}
-.wave{position:absolute!important;left:0;bottom:-1px;width:200%;height:clamp(50px,8vw,110px);z-index:2!important;pointer-events:none;animation:wv 16s linear infinite}
-.wave.w2{opacity:.45;animation-duration:26s;animation-direction:reverse;bottom:-1px;height:clamp(60px,10vw,130px);z-index:1!important}
-/* reveal เมื่อเลื่อนถึง */
-[data-r]{opacity:0;transform:translateY(46px) scale(.96);filter:blur(6px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1),filter .9s;transition-delay:var(--d,0s)}
-[data-r=l]{transform:translateX(-70px)}
-[data-r=r]{transform:translateX(70px)}
-[data-r].in{opacity:1;transform:none;filter:none}
-/* หัวข้อ */
-h2.t{position:relative;padding-bottom:20px}
-h2.t::after{content:"";position:absolute;left:50%;bottom:0;height:5px;width:0;border-radius:5px;background:var(--grad);transform:translateX(-50%);transition:width 1s .35s cubic-bezier(.2,.8,.2,1)}
-h2.t.in::after{width:96px}
-/* พื้นหลังตกแต่งแต่ละส่วน */
-section:not(.alt){background-image:radial-gradient(color-mix(in srgb,var(--main) 9%,transparent) 1.3px,transparent 1.3px);background-size:26px 26px}
-.alt{position:relative;overflow:hidden}
-.alt::before,.alt::after{content:"";position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;animation:blob 16s ease-in-out infinite alternate}
-.alt::before{width:340px;height:340px;left:-100px;top:-80px;background:color-mix(in srgb,var(--main) 20%,transparent)}
-.alt::after{width:320px;height:320px;right:-100px;bottom:-80px;background:rgba(168,85,247,.16);animation-delay:-6s}
-.alt>.wrap{position:relative;z-index:1}
-/* การ์ด */
-.card{position:relative;overflow:hidden;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,border-color .35s;will-change:transform}
-.card::before{content:"";position:absolute;inset:0;background:radial-gradient(380px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--main) 18%,transparent),transparent 45%);opacity:0;transition:opacity .3s;pointer-events:none}
-.card:hover::before{opacity:1}
-.card:hover{box-shadow:0 30px 60px -20px color-mix(in srgb,var(--main) 55%,transparent);border-color:color-mix(in srgb,var(--main) 40%,#fff)}
-.card .ic{transition:transform .5s cubic-bezier(.3,1.6,.5,1),background .3s;animation:float 4s ease-in-out infinite}
-.card:hover .ic{animation:none;transform:rotate(-10deg) scale(1.22);background:color-mix(in srgb,var(--main) 25%,#fff)}
-.tm .ph,.tm img{transition:transform .8s cubic-bezier(.2,.8,.2,1)}
-.tm:hover .ph,.tm:hover img{transform:scale(1.12)}
-.tm div.b{position:relative;background:#fff}
-.stat{transition:transform .3s,box-shadow .3s}
-.stat:hover{transform:translateY(-6px);box-shadow:var(--sh)}
-.stat b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.about img{transition:transform .7s cubic-bezier(.2,.8,.2,1),box-shadow .7s}
-.about img:hover{transform:scale(1.04) rotate(-1.2deg);box-shadow:0 40px 70px -24px color-mix(in srgb,var(--main) 60%,transparent)}
-/* ปุ่ม */
-.btn{position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s,background .25s;box-shadow:0 10px 24px -10px color-mix(in srgb,var(--main) 70%,transparent)}
-.btn::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);transition:left .7s}
-.btn:hover{transform:translateY(-3px)}
-.btn:hover::after{left:130%}
-.btn .rp{position:absolute;border-radius:50%;background:rgba(255,255,255,.55);transform:scale(0);animation:rp .6s ease-out forwards;pointer-events:none}
-/* footer */
-footer{position:relative;overflow:hidden}
-footer::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--grad);background-size:200%;animation:gs 4s linear infinite}
-/* หน้าแอดมิน */
-.adm-top{background:linear-gradient(120deg,var(--dark),var(--main))}
-.panel{animation:fup .5s}
-.login .box{animation:pop .6s cubic-bezier(.2,1.4,.4,1)}
-.tabs button{transition:transform .2s,background .25s,color .25s}
-.tabs button:hover{transform:translateY(-2px)}
-.box{transition:box-shadow .3s}
-.box:hover{box-shadow:0 18px 40px -16px rgba(18,49,143,.4)}
-/* รูปคนในหน้าแรก */
-.hin{display:grid;grid-template-columns:1fr;gap:34px;align-items:center;max-width:1160px;margin:auto}
-.hin.has{grid-template-columns:1.1fr .9fr;text-align:left}
-.hin.has p{margin-left:0;margin-right:0}
-.hp{position:relative;max-width:440px;width:100%;margin:auto;animation:fup 1s 1s backwards}
-.hp::before{content:"";position:absolute;inset:-14px -14px 14px 14px;border-radius:36px;border:3px solid rgba(255,255,255,.45);animation:float 5s ease-in-out infinite}
-.hp::after{content:"";position:absolute;inset:auto auto -26px -26px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.35),transparent 70%);animation:float 4s ease-in-out infinite reverse}
-.hp img{position:relative;z-index:1;width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center top;border-radius:32px;border:4px solid rgba(255,255,255,.6);box-shadow:0 40px 80px -20px rgba(0,0,0,.5);transition:transform .6s cubic-bezier(.2,.8,.2,1)}
-.hp:hover img{transform:scale(1.03) rotate(1deg)}
-@media(max-width:860px){.hin.has{grid-template-columns:1fr;text-align:center}.hin.has p{margin-left:auto;margin-right:auto}.hp{max-width:300px}}
-@media(hover:none){.cg{display:none}}
-@media(max-width:760px){.mouse{display:none}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}[data-r]{opacity:1;transform:none;filter:none}}
-/* footer: ไล่สีนุ่ม ๆ ไม่มีขอบตัด */
-footer{background:linear-gradient(180deg,#fff 0%,color-mix(in srgb,var(--main) 6%,#fff) 14%,color-mix(in srgb,var(--main) 18%,#fff) 28%,color-mix(in srgb,var(--main) 45%,var(--dark)) 50%,color-mix(in srgb,var(--main) 20%,var(--dark)) 64%,var(--dark) 76%);padding:clamp(90px,13vw,140px) 0 30px;border:0}
-footer::before{display:none}
-footer a{opacity:.85;transition:opacity .25s}
-footer a:hover{opacity:1}
+:root{--bg:#0a0909;--panel:#141212;--panel2:#1c1818;--cream:#f3eadb;--muted:#aaa09a;--red:#ed2029;--red2:#a90d16;--line:#ffffff16;--radius:22px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--cream);font-family:Anuphan,sans-serif;line-height:1.65}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 80% 10%,#8b000029,transparent 32%),radial-gradient(ellipse at 10% 55%,#ffffff08,transparent 30%);z-index:-1}
+a{color:inherit;text-decoration:none}button,input,textarea,select{font:inherit}.wrap{width:min(1160px,calc(100% - 36px));margin:auto}
+.topline{height:4px;background:linear-gradient(90deg,#520006,var(--red),#ff6b6b,#520006)}
+header{position:sticky;top:0;z-index:10;background:#0a0909df;backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.08em}.brandmark{width:42px;height:42px;display:grid;place-items:center;background:linear-gradient(145deg,#ff353d,#8d0009);clip-path:polygon(0 0,100% 0,75% 100%,0 78%);font-style:italic;font-size:21px;color:white;box-shadow:0 0 24px #f11a2530}
+.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:.18em;font-weight:500;margin-top:-5px}
+.navlinks{display:flex;gap:25px;color:#d4cbc1;font-size:14px}.navlinks a:hover{color:#ff525a}.navcta,.btn{border:0;border-radius:999px;padding:12px 19px;background:var(--red);color:#fff;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.2s}.navcta:hover,.btn:hover{transform:translateY(-2px);background:#ff303a;box-shadow:0 10px 28px #e51b2930}.btn.secondary{background:transparent;border:1px solid #ffffff35;color:var(--cream)}.btn.secondary:hover{border-color:var(--red)}
+.hero{padding:92px 0 70px;position:relative;overflow:hidden}.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:55px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;border:1px solid #f32a363d;background:#ed202912;color:#ff6a70;padding:7px 12px;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.08em}.dot{width:7px;height:7px;background:var(--red);border-radius:50%;box-shadow:0 0 12px var(--red)}
+h1{font-size:clamp(42px,6.5vw,78px);line-height:1.06;letter-spacing:-.045em;margin:23px 0 20px;font-weight:800}h1 span{color:var(--red);text-shadow:0 0 36px #ed20292b}.lead{max-width:590px;color:#c0b6ad;font-size:17px}.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.proof{display:flex;gap:22px;flex-wrap:wrap;margin-top:32px;color:#b9aea4;font-size:12px}.proof b{color:var(--cream);font-size:14px;display:block}
+.visual{min-height:370px;border:1px solid #ffffff1b;border-radius:30px;background:linear-gradient(145deg,#201b1b,#0e0c0c 60%);position:relative;display:grid;place-items:center;overflow:hidden;box-shadow:0 30px 100px #0008}.visual:before{content:"";position:absolute;width:280px;height:280px;border:1px solid #ed20294d;transform:rotate(45deg);box-shadow:0 0 80px #ed20291b,inset 0 0 70px #ed20290b}.visual:after{content:"";position:absolute;width:180px;height:180px;background:#ed2029;filter:blur(100px);opacity:.2}
+.emblem{position:relative;z-index:1;font-size:clamp(105px,16vw,190px);font-weight:800;font-style:italic;line-height:1;color:#151111;-webkit-text-stroke:2px #3b3333;text-shadow:5px 5px 0 #ed2029,0 0 35px #ed20294a;transform:skew(-10deg)}.visual-tag{position:absolute;z-index:2;bottom:22px;left:22px;right:22px;display:flex;justify-content:space-between;color:#a99d95;font-size:11px;letter-spacing:.12em;border-top:1px solid var(--line);padding-top:15px}
+section{padding:74px 0}.section-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:28px}.kicker{color:var(--red);font-weight:800;font-size:12px;letter-spacing:.18em;text-transform:uppercase}.section-head h2{font-size:clamp(28px,4vw,42px);line-height:1.15;margin:8px 0 0;letter-spacing:-.03em}.section-head p{max-width:440px;color:var(--muted);margin:0;font-size:14px}
+.services{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.service{padding:25px;border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(150deg,#1a1616,#100e0e);min-height:230px;position:relative;overflow:hidden;transition:.25s}.service:hover{transform:translateY(-5px);border-color:#ed20295c}.service .num{font-size:12px;color:var(--red);font-weight:800;letter-spacing:.15em}.service h3{font-size:22px;margin:22px 0 9px}.service p{font-size:14px;color:#b9afa7;margin:0}.service .arrow{position:absolute;right:23px;top:22px;color:#6e5b5b;font-size:20px}
+.band{background:linear-gradient(105deg,#8f0710,#ed2029 52%,#8c0710);padding:30px 0}.band-inner{display:flex;align-items:center;justify-content:space-between;gap:22px}.band h2{font-size:clamp(23px,3vw,34px);margin:0}.band p{margin:4px 0 0;color:#ffe0df;font-size:14px}.band .btn{background:#fff;color:#151010;white-space:nowrap}
+.policy-grid{display:grid;grid-template-columns:.7fr 1.3fr;gap:35px}.policy-intro p{color:var(--muted)}.policy-list{display:grid;gap:10px}.policy{border:1px solid var(--line);border-radius:16px;background:#131111;overflow:hidden}.policy summary{list-style:none;cursor:pointer;padding:18px 20px;font-weight:700;display:flex;align-items:center;justify-content:space-between;gap:14px}.policy summary::-webkit-details-marker{display:none}.policy summary:after{content:"+";font-size:22px;color:var(--red)}.policy[open] summary:after{content:"−"}.policy-body{padding:0 20px 20px;color:#b9afa7;font-size:14px;white-space:pre-line}
+.contact-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:25px}.contact-info,.contact-form{border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(145deg,#191515,#100e0e);padding:28px}.contact-info h3{font-size:25px;margin:8px 0}.contact-info p{color:var(--muted);font-size:14px}.info-row{border-top:1px solid var(--line);padding:14px 0;color:#d7cbc2;font-size:14px}.info-row b{display:block;color:#8f8580;font-size:11px;letter-spacing:.08em;margin-bottom:3px}
+label{display:block;font-size:13px;color:#d4c8bf;margin:0 0 7px}.field{margin-bottom:15px}input,textarea,select{width:100%;border:1px solid #ffffff20;background:#0b0a0a;color:var(--cream);padding:13px 14px;border-radius:12px;outline:none}input:focus,textarea:focus,select:focus{border-color:#ed2029a6;box-shadow:0 0 0 3px #ed202915}textarea{min-height:115px;resize:vertical}.form-note{font-size:11px;color:#938983;margin-top:12px}.status{font-size:13px;margin-top:12px;color:#ff777d;min-height:22px}
+footer{border-top:1px solid var(--line);padding:27px 0 35px;color:#8e837d;font-size:12px}.footer-inner{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}.footer-brand{color:var(--cream);font-weight:800;letter-spacing:.08em}
+.loading{color:var(--muted);font-size:13px}.empty{padding:22px;border:1px dashed #ffffff25;border-radius:15px;color:var(--muted);text-align:center;grid-column:1/-1}
+
+.admin-footer{display:flex;justify-content:flex-end;margin-top:16px}.admin-link{padding:3px 0;background:transparent;border:0;color:#6f6560;font-size:11px;letter-spacing:.14em;text-transform:lowercase;cursor:pointer}.admin-link:hover{color:var(--red);text-decoration:underline}
+.admin-overlay{position:fixed;inset:0;z-index:50;background:#050404ed;backdrop-filter:blur(14px);overflow:auto;padding:22px}.admin-overlay[hidden]{display:none}.admin-shell{width:min(100%,1000px);margin:20px auto 50px}.admin-top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:22px}.admin-top h2{font-size:clamp(30px,5vw,45px);margin:7px 0 0}.admin-top p{margin:4px 0;color:var(--muted);font-size:13px}.admin-close{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:#171313;color:var(--cream);font-size:28px;cursor:pointer}.admin-card{padding:24px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(145deg,#191515,#100e0e);margin-bottom:16px}.admin-card h3{margin:0 0 8px;font-size:22px}.admin-muted{font-size:13px;color:var(--muted)}.admin-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}.admin-pill{font-size:12px;border:1px solid #ed20295c;background:#ed202912;color:#ff777d;border-radius:999px;padding:7px 12px}.admin-tabs{display:flex;gap:8px;overflow-x:auto;margin:15px 0}.admin-tab{white-space:nowrap;background:#171313;color:#c8bcb3;border:1px solid var(--line);padding:10px 15px;border-radius:999px;cursor:pointer}.admin-tab.active{background:var(--red);color:white;border-color:var(--red)}.admin-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.admin-form-grid .field{margin-bottom:4px}.admin-form-grid .wide{grid-column:1/-1}.admin-row{padding:16px 0;border-bottom:1px solid var(--line)}.admin-row:last-child{border-bottom:0}.admin-row-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}.admin-row-head strong{font-size:16px}.admin-actions{display:flex;gap:8px;flex-wrap:wrap}.admin-actions button,.small-btn{font-size:12px;padding:7px 11px;border-radius:999px;border:1px solid #ffffff2b;background:#171313;color:var(--cream);cursor:pointer}.admin-actions .danger{color:#ff858a;border-color:#ed20295c}.admin-empty{padding:20px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}.admin-table-wrap{overflow:auto}table.admin-table{border-collapse:collapse;width:100%;font-size:13px;min-width:620px}table.admin-table th,table.admin-table td{padding:11px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}table.admin-table th{color:#ff777d}.admin-table select{min-width:115px}.admin-notice{font-size:12px;color:#e8b3b5;margin-top:10px}
+@media(max-width:650px){.admin-overlay{padding:12px}.admin-shell{margin:4px auto 30px}.admin-card{padding:17px}.admin-form-grid{grid-template-columns:1fr}.admin-form-grid .wide{grid-column:auto}.admin-toolbar .btn{padding:9px 12px}}
+
+@media(max-width:800px){.navlinks{display:none}.hero{padding-top:55px}.hero-grid,.policy-grid,.contact-grid{grid-template-columns:1fr}.visual{min-height:270px}.services{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}.band-inner{align-items:start;flex-direction:column}.hero-grid{gap:35px}section{padding:55px 0}}
 </style>
 </head>
 <body>
-<div id="app"></div>
-<div class="toast" id="toast">บันทึกแล้ว</div>
+<div class="topline"></div>
+<header><div class="wrap nav">
+  <a class="brand" href="#home"><span class="brandmark">F</span><span><span id="brandName">FLAME SHOP</span><small>WEB STUDIO · THAILAND</small></span></a>
+  <nav class="navlinks"><a href="#services">บริการ</a><a href="#policies">นโยบาย</a><a href="#contact">ติดต่อเรา</a></nav>
+  <a class="navcta" href="#contact">เริ่มโปรเจกต์ ↗</a>
+</div></header>
+<main>
+<section class="hero" id="home"><div class="wrap hero-grid">
+  <div><div class="eyebrow"><span class="dot"></span> DIGITAL EXPERIENCE STUDIO</div>
+    <h1>เว็บไซต์ที่มี<br><span>เอกลักษณ์</span> เป็นของคุณ</h1>
+    <p class="lead" id="heroText">ออกแบบและพัฒนาเว็บไซต์ให้โดดเด่น ใช้งานง่าย รองรับมือถือ พร้อมระบบหลังบ้านที่เหมาะกับธุรกิจและองค์กรของคุณ</p>
+    <div class="hero-actions"><a class="btn" href="#contact">ปรึกษาโปรเจกต์ <span>↗</span></a><a class="btn secondary" href="#services">ดูบริการของเรา</a></div>
+    <div class="proof"><div><b>DESIGN</b>ออกแบบเฉพาะแบรนด์</div><div><b>DEVELOP</b>พัฒนาอย่างเป็นระบบ</div><div><b>SUPPORT</b>ดูแลหลังส่งมอบ</div></div>
+  </div>
+  <div class="visual" aria-label="FLAME SHOP visual"><div class="emblem">F<span style="color:#ed2029">S</span></div><div class="visual-tag"><span>BUILT WITH PURPOSE</span><span>FS / 2026</span></div></div>
+</div></section>
+<section id="services"><div class="wrap"><div class="section-head"><div><div class="kicker">WHAT WE DO</div><h2>บริการของเรา</h2></div><p>โซลูชันเว็บไซต์ที่ปรับให้เข้ากับเป้าหมายของคุณ ตั้งแต่ภาพลักษณ์ไปจนถึงระบบจัดการข้อมูล</p></div>
+  <div class="services" id="serviceList"><div class="empty">กำลังโหลดข้อมูลบริการ…</div></div>
+</div></section>
+<div class="band"><div class="wrap band-inner"><div><h2>มีไอเดียอยู่ในมือแล้วหรือยัง?</h2><p>เล่าให้เราฟัง แล้วเปลี่ยนไอเดียให้เป็นเว็บไซต์ที่ใช้งานได้จริง</p></div><a class="btn" href="#contact">พูดคุยกับเรา ↗</a></div></div>
+<section id="policies"><div class="wrap policy-grid"><div class="policy-intro"><div class="kicker">CLEAR & FAIR</div><h2 style="font-size:clamp(30px,4vw,42px);line-height:1.15;margin:10px 0">นโยบายการให้บริการ</h2><p>เราตั้งใจให้ทุกโปรเจกต์มีขอบเขตงานและข้อตกลงที่ชัดเจน โปรดอ่านรายละเอียดก่อนเริ่มใช้บริการ</p><p class="loading" id="policyUpdated">ข้อมูลนโยบายจากฐานข้อมูล</p></div><div class="policy-list" id="policyList"><div class="empty">กำลังโหลดนโยบาย…</div></div></div></section>
+<section id="contact"><div class="wrap"><div class="section-head"><div><div class="kicker">LET'S TALK</div><h2>เริ่มต้นโปรเจกต์ของคุณ</h2></div><p>ส่งรายละเอียดเบื้องต้นไว้ให้เรา ทีมงานจะติดต่อกลับตามข้อมูลที่คุณให้ไว้</p></div>
+<div class="contact-grid"><div class="contact-info"><div class="kicker">FLAME SHOP</div><h3>สร้างสิ่งที่แตกต่าง<br>ไปด้วยกัน</h3><p>รับทำเว็บไซต์สำหรับธุรกิจ ร้านค้า องค์กร และโปรเจกต์เฉพาะทาง</p><div class="info-row"><b>EMAIL</b><span id="contactEmail">กรุณาตั้งค่าอีเมลในฐานข้อมูล</span></div><div class="info-row"><b>WORKING HOURS</b><span id="contactHours">ตามนัดหมาย</span></div><div class="info-row"><b>LOCATION</b><span id="contactLocation">ประเทศไทย</span></div></div>
+<form class="contact-form" id="contactForm"><div class="field"><label for="name">ชื่อผู้ติดต่อ *</label><input id="name" name="name" required maxlength="120" placeholder="ชื่อของคุณ"></div><div class="field"><label for="email">อีเมลหรือช่องทางติดต่อ *</label><input id="email" name="email" required maxlength="180" placeholder="อีเมล / LINE ID / เบอร์โทร"></div><div class="field"><label for="service">บริการที่สนใจ</label><select id="service" name="service"><option value="">เลือกบริการ (ไม่บังคับ)</option></select></div><div class="field"><label for="message">รายละเอียดโปรเจกต์ *</label><textarea id="message" name="message" required maxlength="3000" placeholder="เล่าความต้องการ งบประมาณ หรือกำหนดเวลาคร่าว ๆ"></textarea></div><button class="btn" type="submit" id="submitBtn">ส่งข้อมูลให้ทีมงาน ↗</button><div class="status" id="formStatus" role="status"></div><p class="form-note">การส่งแบบฟอร์มหมายถึงคุณยินยอมให้เราใช้ข้อมูลนี้เพื่อติดต่อกลับตามคำขอ โปรดอย่าส่งรหัสผ่านหรือข้อมูลลับ</p></form>
+</div></div></section>
+</main>
+<footer><div class="wrap footer-inner"><div><span class="footer-brand" id="footerName">FLAME SHOP</span><div id="copyright">ออกแบบและพัฒนาเว็บไซต์โดย บริษัท เฟลม ช็อป จำกัด</div></div><div>© <span id="year"></span> FLAME SHOP. สงวนลิขสิทธิ์</div></div>
+<div class="wrap admin-footer"><button type="button" id="adminOpen" class="admin-link">admin</button></div></footer>
 
+<div class="admin-overlay" id="adminOverlay" hidden>
+  <section class="admin-shell" aria-label="แผงควบคุมผู้ดูแลระบบ">
+    <div class="admin-top"><div><div class="kicker">FLAME SHOP / CONTROL ROOM</div><h2>Admin Panel</h2><p id="adminSubtitle">เข้าสู่ระบบเพื่อจัดการข้อมูลเว็บไซต์</p></div><button type="button" class="admin-close" id="adminClose" aria-label="ปิด">×</button></div>
+    <div id="adminLogin" class="admin-card">
+      <h3>เข้าสู่ระบบผู้ดูแล</h3><p class="admin-muted">ใช้บัญชีอีเมลที่สร้างไว้ใน Supabase Auth และได้รับสิทธิ์ Admin แล้วเท่านั้น</p>
+      <form id="adminLoginForm"><div class="field"><label for="adminEmail">อีเมล</label><input id="adminEmail" type="email" required autocomplete="username" placeholder="admin@example.com"></div><div class="field"><label for="adminPassword">รหัสผ่าน</label><input id="adminPassword" type="password" required autocomplete="current-password" placeholder="รหัสผ่าน Supabase Auth"></div><button class="btn" type="submit" id="adminLoginBtn">เข้าสู่ระบบ ↗</button><div class="status" id="adminLoginStatus" role="status"></div></form>
+    </div>
+    <div id="adminDashboard" hidden>
+      <div class="admin-toolbar"><span class="admin-pill" id="adminIdentity">เข้าสู่ระบบแล้ว</span><span class="admin-muted">ซิงก์ข้อมูลทุก 5 วินาที</span><button class="btn secondary" id="adminRefresh" type="button">↻ รีเฟรช</button><button class="btn secondary" id="adminLogout" type="button">ออกจากระบบ</button></div>
+      <div class="admin-tabs" role="tablist"><button type="button" class="admin-tab active" data-admin-tab="content">ข้อมูลเว็บ</button><button type="button" class="admin-tab" data-admin-tab="services">บริการ</button><button type="button" class="admin-tab" data-admin-tab="policies">นโยบาย</button><button type="button" class="admin-tab" data-admin-tab="inquiries">ข้อความลูกค้า</button></div>
+      <div id="adminPane" class="admin-card"><p class="admin-muted">กำลังโหลดข้อมูล…</p></div><div class="status" id="adminStatus" role="status"></div>
+    </div>
+  </section>
+</div>
 <script>
-/* ============ ตั้งค่า Supabase ============ */
-/* ใส่ค่าจาก Supabase > Project Settings > API  (ถ้าเว้นว่าง เว็บจะทำงานแบบเก็บในเครื่องนี้) */
-const SB_URL='https://aefzegkgfwszuiznihsk.supabase.co';
-const SB_KEY='sb_publishable_Z1zogpI9qqUlegxG816ncQ_eHeaiFvr';
-const BUCKET='company';
-if(SB_URL&&!window.supabase)console.warn('โหลด supabase-js ไม่สำเร็จ');
-const USE_DB=!!(SB_URL&&SB_KEY&&window.supabase);
-const db=USE_DB?supabase.createClient(SB_URL,SB_KEY):null;
-const KEY='company_profile_v2',AUTH='company_admin_ok';
-const DEF={
-  name:'บริษัท ตัวอย่าง จำกัด',tagline:'พันธมิตรที่คุณไว้วางใจ',
-  intro:'เราคือทีมผู้เชี่ยวชาญที่พร้อมช่วยธุรกิจของคุณเติบโตอย่างยั่งยืน ด้วยบริการคุณภาพและความใส่ใจในทุกรายละเอียด',
-  logo:'',cover:'',heroImg:'',color:'#1d4fd8',
-  aboutTitle:'เกี่ยวกับเรา',
-  about:'ก่อตั้งขึ้นด้วยความมุ่งมั่นที่จะส่งมอบบริการที่ดีที่สุดให้ลูกค้า\nเรายึดมั่นในความซื่อสัตย์ ความโปร่งใส และการพัฒนาอย่างต่อเนื่อง',
-  aboutImg:'',
-  stats:[{v:'10+',l:'ปีประสบการณ์'},{v:'500+',l:'ลูกค้า'},{v:'50+',l:'ทีมงาน'}],
-  pass:hash('admin1234')
-};
-function hash(s){let h=5381;for(const c of s)h=((h<<5)+h+c.charCodeAt(0))>>>0;return String(h);}
-let D,SIG='',SESS=null;
-const merge=r=>Object.assign(structuredClone(DEF),r||{});
-async function load(){
-  let r=null;
-  if(USE_DB){
-    try{const {data,error}=await db.from('company_profile').select('data').eq('id',1).maybeSingle();if(error)throw error;r=data&&data.data;}
-    catch(err){console.warn(err);try{r=JSON.parse(localStorage.getItem(KEY));}catch(_){}}
-  }else{try{r=JSON.parse(localStorage.getItem(KEY));}catch(_){}}
-  D=merge(r);SIG=JSON.stringify(D);
+/* ตั้งค่า URL และ anon key ของ Supabase ในส่วนนี้ก่อนใช้งานจริง */
+const SUPABASE_URL = "https://YOUR_PROJECT.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const CONFIGURED = SUPABASE_URL.includes(".supabase.co") && !SUPABASE_URL.includes("YOUR_PROJECT") && !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
+const db = CONFIGURED ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+const $ = (id)=>document.getElementById(id);
+const safe = (v)=>String(v ?? "").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fallbackServices=[
+ {title:"เว็บไซต์ธุรกิจ",description:"เว็บไซต์แนะนำบริษัทและบริการ ดีไซน์ตรงภาพลักษณ์แบรนด์ พร้อมโครงสร้างที่ใช้งานง่าย.",icon:"01"},
+ {title:"เว็บไซต์ระบบเฉพาะ",description:"พัฒนาระบบสมาชิก ฟอร์มจัดการข้อมูล แดชบอร์ด และเชื่อมต่อฐานข้อมูลตามโจทย์.",icon:"02"},
+ {title:"ร้านค้าออนไลน์",description:"นำเสนอสินค้า จัดหมวดหมู่ และวางประสบการณ์ใช้งานให้ลูกค้าเลือกซื้อได้สะดวก.",icon:"03"}
+];
+const fallbackPolicies=[
+ {title:"ขอบเขตงานและการแก้ไข",body:"ขอบเขตงาน ฟังก์ชัน และจำนวนรอบแก้ไขควรระบุไว้ในใบเสนอราคาหรือข้อตกลงก่อนเริ่มงาน งานเพิ่มเติมนอกขอบเขตอาจมีค่าใช้จ่ายเพิ่ม โดยต้องแจ้งและได้รับการยืนยันก่อนดำเนินการ."},
+ {title:"การชำระเงินและการยกเลิก",body:"งวดชำระเงิน กำหนดส่งงาน และเงื่อนไขยกเลิกให้เป็นไปตามข้อตกลงของแต่ละโปรเจกต์ กรุณาตรวจสอบรายละเอียดก่อนชำระเงิน และเก็บหลักฐานการชำระไว้ทุกครั้ง."},
+ {title:"ข้อมูลและความเป็นส่วนตัว",body:"ข้อมูลที่ส่งผ่านแบบฟอร์มนี้ใช้เพื่อประเมินงานและติดต่อกลับเท่านั้น เราจะจำกัดการเข้าถึงตามความจำเป็น และไม่ควรส่งข้อมูลอ่อนไหว เช่น รหัสผ่านหรือข้อมูลบัตรชำระเงิน."},
+ {title:"การส่งมอบและการดูแลหลังงาน",body:"รายละเอียดไฟล์ต้นฉบับ โดเมน โฮสติ้ง การรับประกัน และการดูแลหลังส่งมอบให้ยึดตามข้อตกลงของโปรเจกต์ ลูกค้าควรเก็บข้อมูลบัญชีและสิทธิ์เข้าถึงระบบอย่างปลอดภัย."}
+];
+function renderServices(items){const list=$("serviceList");list.innerHTML="";(items.length?items:fallbackServices).forEach((s,i)=>{const el=document.createElement("article");el.className="service";el.innerHTML=`<span class="num">${safe(s.icon || String(i+1).padStart(2,"0"))}</span><span class="arrow">↗</span><h3>${safe(s.title)}</h3><p>${safe(s.description)}</p>`;list.appendChild(el)});const sel=$("service");(items.length?items:fallbackServices).forEach(s=>{const o=document.createElement("option");o.value=s.title;o.textContent=s.title;sel.appendChild(o)})}
+function renderPolicies(items){const list=$("policyList");list.innerHTML="";(items.length?items:fallbackPolicies).forEach((p,i)=>{const d=document.createElement("details");d.className="policy";if(i===0)d.open=true;d.innerHTML=`<summary>${safe(p.title)}</summary><div class="policy-body">${safe(p.body)}</div>`;list.appendChild(d)})}
+async function loadData(){
+ if(!db){renderServices(fallbackServices);renderPolicies(fallbackPolicies);return}
+ try{
+  const [siteRes,serviceRes,policyRes]=await Promise.all([
+   db.from("site_content").select("key,value"),
+   db.from("site_services").select("id,title,description,icon,sort_order,active").eq("active",true).order("sort_order"),
+   db.from("site_policies").select("id,title,body,sort_order,active").eq("active",true).order("sort_order")
+  ]);
+  if(siteRes.error)throw siteRes.error;if(serviceRes.error)throw serviceRes.error;if(policyRes.error)throw policyRes.error;
+  applySiteContent(Object.fromEntries((siteRes.data||[]).map(x=>[x.key,x.value])));
+  renderServices(serviceRes.data||[]);renderPolicies(policyRes.data||[]);
+ }catch(err){console.error("Supabase load error:",err);renderServices(fallbackServices);renderPolicies(fallbackPolicies)}
 }
-async function initAuth(){
-  if(!USE_DB)return;
-  try{const {data}=await db.auth.getSession();SESS=data.session;}catch(_){}
-  db.auth.onAuthStateChange((_e,s)=>{SESS=s;});
+function applySiteContent(c){
+ if(c.site_name){$("brandName").textContent=c.site_name;$("footerName").textContent=c.site_name;document.title=c.site_name+" — Web Studio"}
+ if(c.hero_text)$("heroText").textContent=c.hero_text;
+ if(c.contact_email)$("contactEmail").textContent=c.contact_email;
+ if(c.contact_hours)$("contactHours").textContent=c.contact_hours;
+ if(c.contact_location)$("contactLocation").textContent=c.contact_location;
+ if(c.copyright_text)$("copyright").textContent=c.copyright_text;
+ if(c.policy_updated)$("policyUpdated").textContent="อัปเดตนโยบายล่าสุด: "+c.policy_updated;
 }
-let st;
-function save(){
-  let ok=true;try{localStorage.setItem(KEY,JSON.stringify(D));}catch(_){ok=false;}
-  if(!USE_DB){ok?toast('บันทึกแล้ว'):alert('พื้นที่เก็บข้อมูลเต็ม (รูปใหญ่เกินไป) ลองใช้รูปขนาดเล็กลงหรือใส่เป็นลิงก์');return;}
-  clearTimeout(st);
-  st=setTimeout(async()=>{
-    const {pass,...pub}=D;
-    const {error}=await db.from('company_profile').upsert({id:1,data:pub,updated_at:new Date().toISOString()});
-    SIG=JSON.stringify(D);
-    error?toast('บันทึกไม่สำเร็จ: '+error.message,1):toast('บันทึกลงฐานข้อมูลแล้ว');
-  },600);
+const adminState={tab:"content",user:null,site:[],services:[],policies:[],inquiries:[]};
+function adminMsg(message,ok=false){$("adminStatus").textContent=message;$("adminStatus").style.color=ok?"#8fe0aa":"#ff777d"}
+function loginMsg(message){$("adminLoginStatus").textContent=message}
+function showAdmin(open=true){$("adminOverlay").hidden=!open;if(open){document.body.style.overflow="hidden";refreshAdminSession()}else{document.body.style.overflow=""}}
+$("adminOpen").addEventListener("click",()=>showAdmin(true));
+$("adminClose").addEventListener("click",()=>showAdmin(false));
+$("adminOverlay").addEventListener("click",e=>{if(e.target===$("adminOverlay"))showAdmin(false)});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("adminOverlay").hidden)showAdmin(false)});
+async function refreshAdminSession(){
+ if(!db){$("adminLogin").hidden=false;$("adminDashboard").hidden=true;loginMsg("กรุณาตั้งค่า Supabase URL และ anon key ใน index.html ก่อน");return}
+ const {data,error}=await db.auth.getSession();
+ if(error||!data.session){$("adminLogin").hidden=false;$("adminDashboard").hidden=true;return}
+ const {data:authData}=await db.auth.getUser();
+ if(!authData.user){$("adminLogin").hidden=false;$("adminDashboard").hidden=true;return}
+ const {data:adminRow,error:adminError}=await db.from("site_admins").select("user_id").eq("user_id",authData.user.id).maybeSingle();
+ if(adminError||!adminRow){await db.auth.signOut();$("adminLogin").hidden=false;$("adminDashboard").hidden=true;loginMsg("บัญชีนี้ยังไม่ได้รับสิทธิ์ Admin โปรดให้เจ้าของระบบเพิ่มสิทธิ์ในตาราง site_admins");return}
+ adminState.user=authData.user;$("adminLogin").hidden=true;$("adminDashboard").hidden=false;$("adminIdentity").textContent=authData.user.email||"Admin";$("adminSubtitle").textContent="จัดการเนื้อหาเว็บไซต์และข้อความลูกค้า";await loadAdminData();
 }
-/* หน้าเว็บสาธารณะดึงข้อมูลใหม่ทุก 8 วินาที เมื่อมีการแก้ไขจะอัปเดตเอง */
-async function poll(){
-  if(document.hidden||location.hash==='#/admin')return;
-  try{
-    const {data}=await db.from('company_profile').select('data').eq('id',1).maybeSingle();
-    const n=merge(data&&data.data),sg=JSON.stringify(n);
-    if(sg!==SIG){D=n;SIG=sg;const y=scrollY;site();fx();scrollTo(0,y);}
-  }catch(_){}
+$("adminLoginForm").addEventListener("submit",async e=>{
+ e.preventDefault();if(!db){loginMsg("กรุณาตั้งค่า Supabase ก่อน");return}
+ const btn=$("adminLoginBtn");btn.disabled=true;btn.textContent="กำลังตรวจสอบ…";loginMsg("");
+ try{const {error}=await db.auth.signInWithPassword({email:$("adminEmail").value.trim(),password:$("adminPassword").value});if(error)throw error;await refreshAdminSession()}
+ catch(err){loginMsg("เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบอีเมลและรหัสผ่าน")}
+ finally{btn.disabled=false;btn.textContent="เข้าสู่ระบบ ↗"}
+});
+$("adminLogout").addEventListener("click",async()=>{if(db)await db.auth.signOut();adminState.user=null;$("adminDashboard").hidden=true;$("adminLogin").hidden=false;loginMsg("ออกจากระบบแล้ว")});
+$("adminRefresh").addEventListener("click",loadAdminData);
+document.querySelectorAll("[data-admin-tab]").forEach(b=>b.addEventListener("click",()=>{adminState.tab=b.dataset.adminTab;document.querySelectorAll("[data-admin-tab]").forEach(x=>x.classList.toggle("active",x===b));renderAdminPane()}));
+async function loadAdminData(){
+ if(!db||!adminState.user)return;
+ adminMsg("กำลังซิงก์ข้อมูล…");
+ try{
+  const [c,s,p,i]=await Promise.all([
+   db.from("site_content").select("key,value").order("key"),
+   db.from("site_services").select("id,title,description,icon,sort_order,active").order("sort_order"),
+   db.from("site_policies").select("id,title,body,sort_order,active").order("sort_order"),
+   db.from("site_inquiries").select("id,name,contact,service,message,status,created_at").order("created_at",{ascending:false}).limit(100)
+  ]);
+  const err=[c.error,s.error,p.error,i.error].find(Boolean);if(err)throw err;
+  adminState.site=c.data||[];adminState.services=s.data||[];adminState.policies=p.data||[];adminState.inquiries=i.data||[];
+  renderAdminPane();adminMsg("ซิงก์ล่าสุด "+new Date().toLocaleTimeString("th-TH"),true);
+ }catch(err){console.error("Admin load error:",err);adminMsg("โหลดข้อมูลไม่ได้: ตรวจสอบสิทธิ์ Admin และ RLS ใน Supabase")}
 }
-let tt;function toast(m,err){const t=document.getElementById('toast');t.textContent=m;t.style.background=err?'#dc2626':'#16a34a';t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),err?3000:1400);}
-const $=id=>document.getElementById(id);
-const e=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function fixUrl(u){u=String(u||'').trim();if(!u)return '';const m=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/);if(m)return 'https://lh3.googleusercontent.com/d/'+m[1];return u;}
-const img=(u,alt='')=>u?`<img src="${e(fixUrl(u))}" alt="${e(alt)}" referrerpolicy="no-referrer" loading="lazy">`:'';
-
-/* ============ หน้าเว็บสาธารณะ ============ */
-function site(){
-  document.documentElement.style.setProperty('--main',/^#[0-9a-f]{6}$/i.test(D.color)?D.color:'#1d4fd8');
-  document.title=D.name;
-  $('app').innerHTML=`
-  <header><div class="nav"><a class="brand" href="#/">${D.logo?img(D.logo,''):''}<span>${e(D.name)}</span></a>
-    <nav><a href="#about" data-s>เกี่ยวกับ</a></nav></div></header>
-  <div class="hero"${D.cover?` style="background-image:url('${e(fixUrl(D.cover))}')"`:''}>
-    <div class="hin${D.heroImg?' has':''}"><div class="ht"><h1>${e(D.name)}</h1><p>${e(D.tagline)}<br>${e(D.intro)}</p>
-    <a class="btn" href="#about" data-s>เกี่ยวกับเรา</a></div>${D.heroImg?`<div class="hp">${img(D.heroImg,D.name)}</div>`:''}</div></div>
-  <section id="about"><div class="wrap"><h2 class="t">${e(D.aboutTitle)}</h2>
-    <div class="about"><div><p>${e(D.about)}</p><div class="stats">${D.stats.map(s=>`<div class="stat"><b>${e(s.v)}</b><span>${e(s.l)}</span></div>`).join('')}</div></div>
-    ${D.aboutImg?img(D.aboutImg,'เกี่ยวกับเรา'):''}</div></div></section>
-  <footer><div class="wrap">© ${new Date().getFullYear()} ${e(D.name)} · <a href="#/admin">แอดมิน</a></div></footer>`;
-  document.querySelectorAll('[data-s]').forEach(a=>a.onclick=ev=>{ev.preventDefault();const t=document.querySelector(a.getAttribute('href'));t&&t.scrollIntoView({behavior:'smooth'});});
+function fieldHtml(label,name,value,type="text",wide=false){
+ return `<div class="field ${wide?"wide":""}"><label>${safe(label)}</label>${type==="textarea"?`<textarea name="${safe(name)}" maxlength="5000">${safe(value)}</textarea>`:`<input name="${safe(name)}" type="${type}" value="${safe(value)}" maxlength="5000">`}</div>`;
 }
-
-/* ============ เมนูแอดมิน ============ */
-let tab='info';
-const TABS=[['info','ข้อมูลทั่วไป'],['about','เกี่ยวกับ'],['settings','ตั้งค่า']];
-const adminOk=()=>USE_DB?!!SESS:sessionStorage.getItem(AUTH)==='1';
-function admin(){
-  if(!adminOk()){
-    $('app').innerHTML=`<div class="adm"><div class="login"><div class="box"><h3>เข้าสู่ระบบแอดมิน</h3>
-      ${USE_DB?`<label>อีเมลแอดมิน</label><input type="text" id="em" autocomplete="username" autofocus>`:''}
-      <label>รหัสผ่าน</label><input type="password" id="pw" autocomplete="current-password" ${USE_DB?'':'autofocus'}>
-      ${USE_DB?'':'<p class="note">โหมดเก็บในเครื่องนี้ · รหัสเริ่มต้น: admin1234 (เปลี่ยนได้ในแท็บตั้งค่า)</p>'}
-      <div style="margin-top:14px;display:flex;gap:8px"><button class="btn" id="go">เข้าสู่ระบบ</button><a class="btn gray" href="#/">กลับหน้าเว็บ</a></div></div></div></div>`;
-    const go=async()=>{
-      if(USE_DB){
-        const {data,error}=await db.auth.signInWithPassword({email:$('em').value.trim(),password:$('pw').value});
-        if(error)return toast('เข้าสู่ระบบไม่สำเร็จ: '+error.message,1);
-        SESS=data.session;admin();
-      }else if(hash($('pw').value)===D.pass){sessionStorage.setItem(AUTH,'1');admin();}
-      else toast('รหัสผ่านไม่ถูกต้อง',1);
-    };
-    $('go').onclick=go;$('pw').onkeydown=ev=>{if(ev.key==='Enter')go();};
-    return;
-  }
-  document.documentElement.style.setProperty('--main',D.color);
-  $('app').innerHTML=`<div class="adm"><div class="adm-top"><b>⚙️ ระบบจัดการ — ${e(D.name)}</b>
-    <div><span style="font-size:13px;opacity:.85;margin-right:8px">${USE_DB?'🟢 เชื่อมฐานข้อมูล Supabase':'🟡 โหมดเก็บในเครื่องนี้'}</span><a class="btn sm gray" href="#/">ดูหน้าเว็บ</a> <button class="btn sm red" id="lo">ออกจากระบบ</button></div></div>
-    <div class="tabs">${TABS.map(([k,l])=>`<button class="${k===tab?'on':''}" data-t="${k}">${l}</button>`).join('')}</div>
-    <div class="panel" id="panel"></div></div>`;
-  document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;admin();});
-  $('lo').onclick=async()=>{if(USE_DB){await db.auth.signOut();SESS=null;}else sessionStorage.removeItem(AUTH);location.hash='#/';};
-  $('panel').innerHTML=PANELS[tab]();
+function renderAdminPane(){
+ const pane=$("adminPane");
+ if(adminState.tab==="content"){
+  const fields=adminState.site.map(x=>fieldHtml(x.key,x.key,x.value,"text",true)).join("");
+  pane.innerHTML=`<h3>ข้อมูลเว็บไซต์</h3><p class="admin-muted">แก้ไขข้อความและข้อมูลติดต่อที่แสดงบนหน้าเว็บไซต์</p><form id="siteContentForm"><div class="admin-form-grid">${fields||'<div class="admin-empty">ยังไม่มีข้อมูล</div>'}</div><button class="btn" type="submit">บันทึกข้อมูลเว็บไซต์</button></form>`;
+  $("siteContentForm").addEventListener("submit",saveSiteContent);
+ }else if(adminState.tab==="services"){
+  pane.innerHTML=`<h3>จัดการบริการ</h3><p class="admin-muted">เพิ่ม แก้ไข เปิด/ปิดการแสดงผล และลบบริการ</p><form id="newServiceForm"><div class="admin-form-grid">${fieldHtml("ชื่อบริการ","title","","text")}${fieldHtml("ลำดับ","sort_order","10","number")}${fieldHtml("รายละเอียด","description","","textarea",true)}${fieldHtml("รหัส/ไอคอน","icon","NEW","text")}</div><button class="btn" type="submit">+ เพิ่มบริการ</button></form><div class="admin-row">${adminState.services.map(s=>`<div class="admin-row"><div class="admin-row-head"><strong>${safe(s.title)} ${s.active?"":"(ซ่อนอยู่)"}</strong><div class="admin-actions"><button data-edit-service="${s.id}">แก้ไข</button><button data-toggle-service="${s.id}">${s.active?"ซ่อน":"เผยแพร่"}</button><button class="danger" data-delete-service="${s.id}">ลบ</button></div></div><div class="admin-muted">${safe(s.description)}</div></div>`).join("")||'<div class="admin-empty">ยังไม่มีบริการ</div>'}</div>`;
+  $("newServiceForm").addEventListener("submit",addService);
+  pane.querySelectorAll("[data-edit-service]").forEach(b=>b.addEventListener("click",()=>editService(b.dataset.editService)));
+  pane.querySelectorAll("[data-toggle-service]").forEach(b=>b.addEventListener("click",()=>toggleRow("site_services",b.dataset.toggleService,"active",!adminState.services.find(x=>x.id===b.dataset.toggleService).active)));
+  pane.querySelectorAll("[data-delete-service]").forEach(b=>b.addEventListener("click",()=>deleteRow("site_services",b.dataset.deleteService,"บริการ")));
+ }else if(adminState.tab==="policies"){
+  pane.innerHTML=`<h3>จัดการนโยบาย</h3><p class="admin-muted">เพิ่มหรือแก้ไขรายละเอียดนโยบายที่แสดงหน้าเว็บ</p><form id="newPolicyForm"><div class="admin-form-grid">${fieldHtml("หัวข้อนโยบาย","title","","text",true)}${fieldHtml("ลำดับ","sort_order","10","number")}${fieldHtml("เนื้อหา","body","","textarea",true)}</div><button class="btn" type="submit">+ เพิ่มนโยบาย</button></form>${adminState.policies.map(p=>`<div class="admin-row"><div class="admin-row-head"><strong>${safe(p.title)} ${p.active?"":"(ซ่อนอยู่)"}</strong><div class="admin-actions"><button data-edit-policy="${p.id}">แก้ไข</button><button data-toggle-policy="${p.id}">${p.active?"ซ่อน":"เผยแพร่"}</button><button class="danger" data-delete-policy="${p.id}">ลบ</button></div></div><div class="admin-muted">${safe(p.body)}</div></div>`).join("")||'<div class="admin-empty">ยังไม่มีนโยบาย</div>'}`;
+  $("newPolicyForm").addEventListener("submit",addPolicy);
+  pane.querySelectorAll("[data-edit-policy]").forEach(b=>b.addEventListener("click",()=>editPolicy(b.dataset.editPolicy)));
+  pane.querySelectorAll("[data-toggle-policy]").forEach(b=>b.addEventListener("click",()=>toggleRow("site_policies",b.dataset.togglePolicy,"active",!adminState.policies.find(x=>x.id===b.dataset.togglePolicy).active)));
+  pane.querySelectorAll("[data-delete-policy]").forEach(b=>b.addEventListener("click",()=>deleteRow("site_policies",b.dataset.deletePolicy,"นโยบาย")));
+ }else{
+  pane.innerHTML=`<h3>ข้อความจากลูกค้า</h3><p class="admin-muted">แสดง 100 รายการล่าสุด ข้อมูลนี้ไม่เปิดให้อ่านแบบสาธารณะ</p><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>วันที่</th><th>ผู้ติดต่อ</th><th>รายละเอียด</th><th>สถานะ</th></tr></thead><tbody>${adminState.inquiries.map(i=>`<tr><td>${safe(new Date(i.created_at).toLocaleString("th-TH"))}</td><td><b>${safe(i.name)}</b><br>${safe(i.contact)}</td><td>${safe(i.service||"-")}<br>${safe(i.message)}</td><td><select data-inquiry-status="${i.id}"><option value="new" ${i.status==="new"?"selected":""}>ใหม่</option><option value="contacted" ${i.status==="contacted"?"selected":""}>ติดต่อแล้ว</option><option value="closed" ${i.status==="closed"?"selected":""}>ปิดงาน</option></select></td></tr>`).join("")}</tbody></table></div>${adminState.inquiries.length?"":'<div class="admin-empty">ยังไม่มีข้อความลูกค้า</div>'}`;
+  pane.querySelectorAll("[data-inquiry-status]").forEach(s=>s.addEventListener("change",async()=>{const {error}=await db.from("site_inquiries").update({status:s.value}).eq("id",s.dataset.inquiryStatus);if(error)adminMsg("เปลี่ยนสถานะไม่ได้ ตรวจสอบ RLS");else adminMsg("อัปเดตสถานะแล้ว",true)}));
+ }
 }
-/* ตัวช่วยฟอร์ม */
-const inp=(label,path,type='text')=>`<label>${label}</label><input type="${type}" value="${e(get(path))}" oninput="set('${path}',this.value)">`;
-const area=(label,path)=>`<label>${label}</label><textarea oninput="set('${path}',this.value)">${e(get(path))}</textarea>`;
-const imgf=(label,path)=>`<label>${label}</label><input type="text" placeholder="วางลิงก์รูป หรือกดอัปโหลด" value="${e(get(path))}" oninput="set('${path}',this.value)" id="f_${path.replace(/\W/g,'_')}">
-  <div class="imgrow"><button class="btn sm gray" onclick="upload('${path}')">อัปโหลดรูป</button><button class="btn sm gray" onclick="set('${path}','',1)">ล้างรูป</button>${get(path)?img(get(path),''):''}</div>`;
-function get(p){return p.split('.').reduce((o,k)=>o?.[k],D);}
-function set(p,v,re){const k=p.split('.'),l=k.pop(),o=k.reduce((o,x)=>o[x],D);o[l]=v;save();if(re)admin();}
-function upload(path){
-  const f=document.createElement('input');f.type='file';f.accept='image/*';
-  f.onchange=()=>{const file=f.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{
-    const png=file.type==='image/png',mime=png?'image/png':'image/jpeg',ext=png?'png':'jpg';
-    const s=Math.min(1,(USE_DB?1400:900)/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;
-    c.getContext('2d').drawImage(im,0,0,c.width,c.height);
-    if(!USE_DB){set(path,c.toDataURL(mime,.82),1);return;}
-    toast('กำลังอัปโหลดรูป...');
-    c.toBlob(async b=>{
-      const name=`${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
-      const {error}=await db.storage.from(BUCKET).upload(name,b,{contentType:mime,cacheControl:'31536000'});
-      if(error)return toast('อัปโหลดไม่สำเร็จ: '+error.message,1);
-      set(path,db.storage.from(BUCKET).getPublicUrl(name).data.publicUrl,1);
-    },mime,.85);
-  };im.src=r.result;};r.readAsDataURL(file);};
-  f.click();
+async function saveSiteContent(e){
+ e.preventDefault();const form=new FormData(e.currentTarget);adminMsg("กำลังบันทึก…");
+ try{for(const [key,value] of form.entries()){const {error}=await db.from("site_content").upsert({key,value:String(value)},{onConflict:"key"});if(error)throw error}adminMsg("บันทึกข้อมูลเว็บไซต์แล้ว",true);await loadData();await loadAdminData()}
+ catch(err){console.error(err);adminMsg("บันทึกไม่สำเร็จ ตรวจสอบสิทธิ์ Admin/RLS")}
 }
-function listAdd(key,tpl){D[key].push(tpl);save();admin();}
-function listDel(key,i){if(confirm('ลบรายการนี้?')){D[key].splice(i,1);save();admin();}}
-function listMove(key,i,d){const a=D[key],j=i+d;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];save();admin();}
-const ctl=(key,i)=>`<span><button class="btn sm gray" onclick="listMove('${key}',${i},-1)">↑</button> <button class="btn sm gray" onclick="listMove('${key}',${i},1)">↓</button> <button class="btn sm red" onclick="listDel('${key}',${i})">ลบ</button></span>`;
-async function chgPw(){
-  const v=$('np').value;if(v.length<6)return alert('อย่างน้อย 6 ตัวอักษร');
-  if(USE_DB){const {error}=await db.auth.updateUser({password:v});if(error)return toast(error.message,1);toast('เปลี่ยนรหัสผ่านแล้ว');}
-  else{D.pass=hash(v);save();}
-  $('np').value='';
+async function addService(e){
+ e.preventDefault();const f=new FormData(e.currentTarget);const payload={title:String(f.get("title")).trim(),description:String(f.get("description")).trim(),icon:String(f.get("icon")||""),sort_order:Number(f.get("sort_order")||0),active:true};
+ if(!payload.title){adminMsg("กรุณากรอกชื่อบริการ");return}
+ const {error}=await db.from("site_services").insert(payload);if(error){adminMsg("เพิ่มบริการไม่สำเร็จ")}else{adminMsg("เพิ่มบริการแล้ว",true);await loadAdminData();await loadData()}
 }
-function resetAll(){if(!confirm('รีเซ็ตกลับค่าเริ่มต้นทั้งหมด?'))return;const old=D.pass;D=structuredClone(DEF);D.pass=old;save();admin();}
-function exp(){const {pass,...pub}=D;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(pub,null,2)],{type:'application/json'}));a.download='company-profile.json';a.click();}
-function imp(){const f=document.createElement('input');f.type='file';f.accept='.json';f.onchange=()=>{const r=new FileReader();r.onload=()=>{try{const old=D.pass;D=merge(JSON.parse(r.result));D.pass=old;save();admin();}catch(_){alert('ไฟล์ไม่ถูกต้อง');}};r.readAsText(f.files[0]);};f.click();}
-const PANELS={
-  info:()=>`<div class="box"><h3>ข้อมูลหลักของบริษัท</h3>${inp('ชื่อบริษัท','name')}${inp('สโลแกน','tagline')}${area('แนะนำสั้น ๆ','intro')}
-    ${imgf('โลโก้','logo')}${imgf('รูปคนหน้าแรก (แสดงข้างชื่อบริษัท เช่น ผู้บริหาร/ทีมงาน)','heroImg')}${imgf('รูปพื้นหลังหน้าแรก (ถ้ามี)','cover')}
-    <label>สีหลักของเว็บ</label><input type="color" value="${e(D.color)}" oninput="set('color',this.value)" style="max-width:120px"></div>`,
-  about:()=>`<div class="box"><h3>เกี่ยวกับบริษัท</h3>${inp('หัวข้อ','aboutTitle')}${area('เนื้อหา (ขึ้นบรรทัดใหม่ได้)','about')}${imgf('รูปประกอบ','aboutImg')}</div>
-    <div class="box"><h3>ตัวเลขเด่น</h3>${D.stats.map((s,i)=>`<div class="item"><div class="hd">รายการ ${i+1}${ctl('stats',i)}</div><div class="row">${inp('ตัวเลข','stats.'+i+'.v')}${inp('คำอธิบาย','stats.'+i+'.l')}</div></div>`).join('')}
-    <button class="btn sm" onclick="listAdd('stats',{v:'',l:''})">+ เพิ่มตัวเลข</button></div>`,
-  settings:()=>`<div class="box"><h3>เปลี่ยนรหัสผ่านแอดมิน</h3><label>รหัสผ่านใหม่</label><input type="password" id="np" autocomplete="new-password">
-    <div style="margin-top:10px"><button class="btn sm" onclick="chgPw()">บันทึกรหัสผ่าน</button></div></div>
-    <div class="box"><h3>สำรอง / นำเข้าข้อมูล</h3>
-    <button class="btn sm" onclick="exp()">ดาวน์โหลดข้อมูล (JSON)</button>
-    <button class="btn sm gray" onclick="imp()">นำเข้าข้อมูล</button>
-    <button class="btn sm red" onclick="resetAll()">รีเซ็ตทั้งหมด</button>
-    <p class="note">${USE_DB?'ข้อมูลเก็บในฐานข้อมูล Supabase ทุกคนที่เปิดเว็บจะเห็นข้อมูลชุดเดียวกัน':'ตอนนี้ข้อมูลเก็บในเบราว์เซอร์เครื่องนี้เท่านั้น ใส่ SB_URL และ SB_KEY ที่ต้นสคริปต์เพื่อเชื่อมฐานข้อมูล'}</p></div>`
-};
-
-/* ============ router ============ */
-/* ============ FX: ลูกเล่นทั้งเว็บ ============ */
-let fxClean=[];
-function fx(){
-  fxClean.forEach(f=>f());fxClean=[];
-  document.querySelectorAll('.prog,.cg,.top').forEach(n=>n.remove());
-  if(location.hash==='#/admin')return;
-  const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  const mk=(t,c)=>{const n=document.createElement(t);n.className=c;document.body.appendChild(n);return n;};
-  /* preloader (ครั้งแรกครั้งเดียว) */
-  if(!window.__pre){window.__pre=1;const p=mk('div','pre');p.innerHTML='<i></i>';setTimeout(()=>p.classList.add('out'),550);setTimeout(()=>p.remove(),1300);}
-  const hero=document.querySelector('.hero'),hd=document.querySelector('header');
-  /* ตกแต่ง hero */
-  const h1=hero.querySelector('h1');
-  h1.innerHTML=h1.textContent.split(' ').map((w,i)=>`<span class="w"><span style="--i:${i}">${e(w)}</span></span>`).join(' ');
-  hero.insertAdjacentHTML('afterbegin','<i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i>');
-  hero.insertAdjacentHTML('beforeend','<i class="mouse"></i><svg class="wave w2" viewBox="0 0 2880 120" preserveAspectRatio="none"><path fill="#fff" d="M0,40 C240,100 480,0 720,60 C960,110 1200,20 1440,40 C1680,100 1920,0 2160,60 C2400,110 2640,20 2880,40 L2880,120 L0,120Z"/></svg><svg class="wave" viewBox="0 0 2880 120" preserveAspectRatio="none"><path fill="#fff" d="M0,64 C240,120 480,0 720,48 C960,96 1200,16 1440,64 C1680,120 1920,0 2160,48 C2400,96 2640,16 2880,64 L2880,120 L0,120Z"/></svg>');
-  /* อนุภาคเชื่อมกันใน hero */
-  const cv=document.createElement('canvas');hero.prepend(cv);
-  const cx=cv.getContext('2d');let W,H,P=[],raf;
-  const rs=()=>{W=cv.width=hero.clientWidth;H=cv.height=hero.clientHeight;P=Array.from({length:Math.min(70,Math.floor(W/18))},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.5,vy:(Math.random()-.5)*.5,r:1+Math.random()*2}));};
-  const draw=()=>{cx.clearRect(0,0,W,H);
-    for(const p of P){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fillStyle='rgba(255,255,255,.75)';cx.fill();}
-    for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){const a=P[i],b=P[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<120){cx.strokeStyle=`rgba(255,255,255,${.25*(1-d/120)})`;cx.lineWidth=1;cx.beginPath();cx.moveTo(a.x,a.y);cx.lineTo(b.x,b.y);cx.stroke();}}
-    raf=requestAnimationFrame(draw);};
-  rs();addEventListener('resize',rs);if(!rm)draw();
-  fxClean.push(()=>{cancelAnimationFrame(raf);removeEventListener('resize',rs);});
-  /* แถบความคืบหน้า / ปุ่มขึ้นบน / เมนูไฮไลต์ / พารัลแลกซ์ */
-  const top=mk('button','top');
-  top.textContent='↑';top.setAttribute('aria-label','กลับขึ้นบน');top.onclick=()=>scrollTo({top:0,behavior:'smooth'});
-  const secs=[...document.querySelectorAll('section[id]')],links=[...document.querySelectorAll('nav a[data-s]')];
-  const onS=()=>{const y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
-    hd.classList.toggle('sc',y>20);top.classList.toggle('show',y>500);
-    if(!rm&&y<innerHeight)hero.style.setProperty('--py',(y*.25)+'px');
-    let cur='';secs.forEach(s=>{if(s.getBoundingClientRect().top<innerHeight*.4)cur=s.id;});
-    links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+cur));};
-  addEventListener('scroll',onS,{passive:true});fxClean.push(()=>removeEventListener('scroll',onS));onS();
-  /* แสงตามเมาส์ */
-  if(matchMedia('(hover:hover)').matches&&!rm){
-    const g=mk('div','cg');g.style.opacity=0;
-    const mv=ev=>{g.style.opacity=.7;g.style.transform=`translate(${ev.clientX}px,${ev.clientY}px)`;};
-    addEventListener('pointermove',mv);fxClean.push(()=>removeEventListener('pointermove',mv));
-  }
-  /* ตัวเลขวิ่ง */
-  const count=b=>{const t=b.textContent,m=t.match(/[\d,.]+/);if(!m||rm)return;
-    const num=parseFloat(m[0].replace(/,/g,''));if(isNaN(num))return;const dec=(m[0].split('.')[1]||'').length,t0=performance.now();
-    const step=now=>{const k=Math.min(1,(now-t0)/1600);
-      b.textContent=k>=1?t:t.replace(m[0],(num*(1-Math.pow(1-k,4))).toLocaleString('en-US',{minimumFractionDigits:dec,maximumFractionDigits:dec}));
-      if(k<1)requestAnimationFrame(step);};requestAnimationFrame(step);};
-  /* reveal เมื่อเลื่อนถึง */
-  const set=(sel,mode,step)=>document.querySelectorAll(sel).forEach((n,i)=>{n.dataset.r=mode;n.style.setProperty('--d',(step?(i%6)*step:0)+'s');});
-  set('h2.t','u');set('.about>div','l');set('.about>img','r');set('.stat','u',.12);set('.grid>.card','u',.12);set('.contact>.card','u',.12);
-  const io=new IntersectionObserver(es=>es.forEach(en=>{
-    if(!en.isIntersecting)return;const n=en.target;n.classList.add('in');io.unobserve(n);
-    if(n.classList.contains('stat'))count(n.querySelector('b'));
-    setTimeout(()=>{n.removeAttribute('data-r');n.style.removeProperty('--d');},1700);
-  }),{threshold:.15,rootMargin:'0px 0px -40px 0px'});
-  document.querySelectorAll('[data-r]').forEach(n=>io.observe(n));
-  fxClean.push(()=>io.disconnect());
-  /* การ์ดเอียง 3 มิติ + แสงตามเมาส์ */
-  document.querySelectorAll('.card').forEach(c=>{
-    c.addEventListener('pointermove',ev=>{const r=c.getBoundingClientRect(),x=ev.clientX-r.left,y=ev.clientY-r.top;
-      c.style.setProperty('--mx',x+'px');c.style.setProperty('--my',y+'px');
-      if(ev.pointerType==='mouse'&&!rm&&!c.hasAttribute('data-r'))c.style.transform=`perspective(800px) rotateX(${((y/r.height)-.5)*-8}deg) rotateY(${((x/r.width)-.5)*8}deg) translateY(-6px)`;});
-    c.addEventListener('pointerleave',()=>{c.style.transform='';});
-  });
-  /* ริปเปิลปุ่ม */
-  document.querySelectorAll('.btn').forEach(b=>b.addEventListener('pointerdown',ev=>{
-    const r=b.getBoundingClientRect(),s=Math.max(r.width,r.height),sp=document.createElement('span');
-    sp.className='rp';sp.style.cssText=`width:${s}px;height:${s}px;left:${ev.clientX-r.left-s/2}px;top:${ev.clientY-r.top-s/2}px`;
-    b.appendChild(sp);setTimeout(()=>sp.remove(),650);}));
+async function addPolicy(e){
+ e.preventDefault();const f=new FormData(e.currentTarget);const payload={title:String(f.get("title")).trim(),body:String(f.get("body")).trim(),sort_order:Number(f.get("sort_order")||0),active:true};
+ if(!payload.title||!payload.body){adminMsg("กรุณากรอกหัวข้อและเนื้อหานโยบาย");return}
+ const {error}=await db.from("site_policies").insert(payload);if(error){adminMsg("เพิ่มนโยบายไม่สำเร็จ")}else{adminMsg("เพิ่มนโยบายแล้ว",true);await loadAdminData();await loadData()}
 }
-function route(){window.scrollTo(0,0);location.hash==='#/admin'?admin():site();fx();}
-window.addEventListener('hashchange',route);
-(async()=>{await initAuth();await load();route();if(USE_DB)setInterval(poll,8000);})();
+async function editService(id){
+ const s=adminState.services.find(x=>x.id===id);if(!s)return;
+ const title=prompt("ชื่อบริการ",s.title);if(title===null)return;
+ const description=prompt("รายละเอียดบริการ",s.description);if(description===null)return;
+ const order=prompt("ลำดับการแสดงผล",s.sort_order);if(order===null)return;
+ const {error}=await db.from("site_services").update({title:title.trim(),description:description.trim(),sort_order:Number(order)}).eq("id",id);
+ if(error)adminMsg("แก้ไขบริการไม่สำเร็จ");else{adminMsg("แก้ไขบริการแล้ว",true);await loadAdminData();await loadData()}
+}
+async function editPolicy(id){
+ const p=adminState.policies.find(x=>x.id===id);if(!p)return;
+ const title=prompt("หัวข้อนโยบาย",p.title);if(title===null)return;
+ const body=prompt("เนื้อหานโยบาย",p.body);if(body===null)return;
+ const order=prompt("ลำดับการแสดงผล",p.sort_order);if(order===null)return;
+ const {error}=await db.from("site_policies").update({title:title.trim(),body:body.trim(),sort_order:Number(order),updated_at:new Date().toISOString()}).eq("id",id);
+ if(error)adminMsg("แก้ไขนโยบายไม่สำเร็จ");else{adminMsg("แก้ไขนโยบายแล้ว",true);await loadAdminData();await loadData()}
+}
+async function toggleRow(table,id,key,value){
+ const {error}=await db.from(table).update({[key]:value}).eq("id",id);
+ if(error)adminMsg("เปลี่ยนสถานะไม่สำเร็จ ตรวจสอบ RLS");else{adminMsg("อัปเดตแล้ว",true);await loadAdminData();await loadData()}
+}
+async function deleteRow(table,id,label){
+ if(!confirm(`ยืนยันลบ${label}นี้หรือไม่?`))return;
+ const {error}=await db.from(table).delete().eq("id",id);
+ if(error)adminMsg("ลบไม่สำเร็จ ตรวจสอบ RLS");else{adminMsg("ลบข้อมูลแล้ว",true);await loadAdminData();await loadData()}
+}
+// Poll public content and the open admin panel every five seconds.
+setInterval(()=>{loadData();if(!$("adminOverlay").hidden&&adminState.user&&!$("adminDashboard").hidden)loadAdminData()},5000);
+$("year").textContent=new Date().getFullYear();loadData();
 </script>
-</body>
-</html>
+</body></html>
