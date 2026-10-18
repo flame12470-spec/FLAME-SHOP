@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>โปรไฟล์บริษัท</title>
 <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
 <style>
 :root{--main:#1d4fd8;--dark:#0c1a3d;--mute:#5b6783;--bg:#f6f8fc;--line:#e3e8f3;--sh:0 12px 34px -14px rgba(18,49,143,.35)}
 *{box-sizing:border-box}
@@ -209,8 +210,15 @@ footer a:hover{opacity:1}
 <div class="toast" id="toast">บันทึกแล้ว</div>
 
 <script>
-/* ============ ข้อมูล (เก็บใน localStorage ของเบราว์เซอร์) ============ */
-const KEY='company_profile_v1',AUTH='company_admin_ok';
+/* ============ ตั้งค่า Supabase ============ */
+/* ใส่ค่าจาก Supabase > Project Settings > API  (ถ้าเว้นว่าง เว็บจะทำงานแบบเก็บในเครื่องนี้) */
+const SB_URL='';   // เช่น https://xxxxxxxx.supabase.co
+const SB_KEY='';   // anon / publishable key
+const BUCKET='company';
+if(SB_URL&&!window.supabase)console.warn('โหลด supabase-js ไม่สำเร็จ');
+const USE_DB=!!(SB_URL&&SB_KEY&&window.supabase);
+const db=USE_DB?supabase.createClient(SB_URL,SB_KEY):null;
+const KEY='company_profile_v2',AUTH='company_admin_ok';
 const DEF={
   name:'บริษัท ตัวอย่าง จำกัด',tagline:'พันธมิตรที่คุณไว้วางใจ',
   intro:'เราคือทีมผู้เชี่ยวชาญที่พร้อมช่วยธุรกิจของคุณเติบโตอย่างยั่งยืน ด้วยบริการคุณภาพและความใส่ใจในทุกรายละเอียด',
@@ -219,21 +227,46 @@ const DEF={
   about:'ก่อตั้งขึ้นด้วยความมุ่งมั่นที่จะส่งมอบบริการที่ดีที่สุดให้ลูกค้า\nเรายึดมั่นในความซื่อสัตย์ ความโปร่งใส และการพัฒนาอย่างต่อเนื่อง',
   aboutImg:'',
   stats:[{v:'10+',l:'ปีประสบการณ์'},{v:'500+',l:'ลูกค้า'},{v:'50+',l:'ทีมงาน'}],
-  services:[
-    {icon:'💡',title:'ที่ปรึกษาธุรกิจ',desc:'วางแผนกลยุทธ์และแนวทางการเติบโตที่เหมาะกับองค์กรของคุณ'},
-    {icon:'💻',title:'พัฒนาระบบ',desc:'ออกแบบและพัฒนาซอฟต์แวร์ เว็บไซต์ และแอปพลิเคชัน'},
-    {icon:'📈',title:'การตลาดดิจิทัล',desc:'เพิ่มยอดขายและการมองเห็นแบรนด์ด้วยข้อมูลจริง'}],
-  team:[
-    {name:'คุณสมชาย ใจดี',role:'ประธานเจ้าหน้าที่บริหาร',img:''},
-    {name:'คุณสมหญิง รักงาน',role:'ผู้อำนวยการฝ่ายปฏิบัติการ',img:''}],
-  contacts:{address:'123 ถนนตัวอย่าง กรุงเทพมหานคร 10110',phone:'02-123-4567',email:'info@example.com',hours:'จันทร์–ศุกร์ 09:00–18:00',facebook:'',line:''},
   pass:hash('admin1234')
 };
 function hash(s){let h=5381;for(const c of s)h=((h<<5)+h+c.charCodeAt(0))>>>0;return String(h);}
-let D;
-function load(){try{const r=JSON.parse(localStorage.getItem(KEY));D=Object.assign(structuredClone(DEF),r||{});D.contacts=Object.assign({},DEF.contacts,(r||{}).contacts);}catch(_){D=structuredClone(DEF);}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(D));toast('บันทึกแล้ว');}catch(_){alert('พื้นที่เก็บข้อมูลเต็ม (รูปใหญ่เกินไป) ลองใช้รูปขนาดเล็กลงหรือใส่เป็นลิงก์');}}
-let tt;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1200);}
+let D,SIG='',SESS=null;
+const merge=r=>Object.assign(structuredClone(DEF),r||{});
+async function load(){
+  let r=null;
+  if(USE_DB){
+    try{const {data,error}=await db.from('company_profile').select('data').eq('id',1).maybeSingle();if(error)throw error;r=data&&data.data;}
+    catch(err){console.warn(err);try{r=JSON.parse(localStorage.getItem(KEY));}catch(_){}}
+  }else{try{r=JSON.parse(localStorage.getItem(KEY));}catch(_){}}
+  D=merge(r);SIG=JSON.stringify(D);
+}
+async function initAuth(){
+  if(!USE_DB)return;
+  try{const {data}=await db.auth.getSession();SESS=data.session;}catch(_){}
+  db.auth.onAuthStateChange((_e,s)=>{SESS=s;});
+}
+let st;
+function save(){
+  let ok=true;try{localStorage.setItem(KEY,JSON.stringify(D));}catch(_){ok=false;}
+  if(!USE_DB){ok?toast('บันทึกแล้ว'):alert('พื้นที่เก็บข้อมูลเต็ม (รูปใหญ่เกินไป) ลองใช้รูปขนาดเล็กลงหรือใส่เป็นลิงก์');return;}
+  clearTimeout(st);
+  st=setTimeout(async()=>{
+    const {pass,...pub}=D;
+    const {error}=await db.from('company_profile').upsert({id:1,data:pub,updated_at:new Date().toISOString()});
+    SIG=JSON.stringify(D);
+    error?toast('บันทึกไม่สำเร็จ: '+error.message,1):toast('บันทึกลงฐานข้อมูลแล้ว');
+  },600);
+}
+/* หน้าเว็บสาธารณะดึงข้อมูลใหม่ทุก 8 วินาที เมื่อมีการแก้ไขจะอัปเดตเอง */
+async function poll(){
+  if(document.hidden||location.hash==='#/admin')return;
+  try{
+    const {data}=await db.from('company_profile').select('data').eq('id',1).maybeSingle();
+    const n=merge(data&&data.data),sg=JSON.stringify(n);
+    if(sg!==SIG){D=n;SIG=sg;const y=scrollY;site();fx();scrollTo(0,y);}
+  }catch(_){}
+}
+let tt;function toast(m,err){const t=document.getElementById('toast');t.textContent=m;t.style.background=err?'#dc2626':'#16a34a';t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),err?3000:1400);}
 const $=id=>document.getElementById(id);
 const e=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function fixUrl(u){u=String(u||'').trim();if(!u)return '';const m=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/);if(m)return 'https://lh3.googleusercontent.com/d/'+m[1];return u;}
@@ -243,7 +276,6 @@ const img=(u,alt='')=>u?`<img src="${e(fixUrl(u))}" alt="${e(alt)}" referrerpoli
 function site(){
   document.documentElement.style.setProperty('--main',/^#[0-9a-f]{6}$/i.test(D.color)?D.color:'#1d4fd8');
   document.title=D.name;
-  const c=D.contacts;
   $('app').innerHTML=`
   <header><div class="nav"><a class="brand" href="#/">${D.logo?img(D.logo,''):''}<span>${e(D.name)}</span></a>
     <nav><a href="#about" data-s>เกี่ยวกับ</a></nav></div></header>
@@ -260,23 +292,32 @@ function site(){
 /* ============ เมนูแอดมิน ============ */
 let tab='info';
 const TABS=[['info','ข้อมูลทั่วไป'],['about','เกี่ยวกับ'],['settings','ตั้งค่า']];
+const adminOk=()=>USE_DB?!!SESS:sessionStorage.getItem(AUTH)==='1';
 function admin(){
-  if(sessionStorage.getItem(AUTH)!=='1'){
+  if(!adminOk()){
     $('app').innerHTML=`<div class="adm"><div class="login"><div class="box"><h3>เข้าสู่ระบบแอดมิน</h3>
-      <label>รหัสผ่าน</label><input type="password" id="pw" autofocus>
-      <p class="note">รหัสเริ่มต้น: admin1234 (เปลี่ยนได้ในแท็บตั้งค่า)</p>
+      ${USE_DB?`<label>อีเมลแอดมิน</label><input type="text" id="em" autocomplete="username" autofocus>`:''}
+      <label>รหัสผ่าน</label><input type="password" id="pw" autocomplete="current-password" ${USE_DB?'':'autofocus'}>
+      ${USE_DB?'':'<p class="note">โหมดเก็บในเครื่องนี้ · รหัสเริ่มต้น: admin1234 (เปลี่ยนได้ในแท็บตั้งค่า)</p>'}
       <div style="margin-top:14px;display:flex;gap:8px"><button class="btn" id="go">เข้าสู่ระบบ</button><a class="btn gray" href="#/">กลับหน้าเว็บ</a></div></div></div></div>`;
-    const go=()=>{if(hash($('pw').value)===D.pass){sessionStorage.setItem(AUTH,'1');admin();}else{toast('รหัสผ่านไม่ถูกต้อง');$('toast').style.background='#dc2626';setTimeout(()=>$('toast').style.background='#16a34a',1500);}};
+    const go=async()=>{
+      if(USE_DB){
+        const {data,error}=await db.auth.signInWithPassword({email:$('em').value.trim(),password:$('pw').value});
+        if(error)return toast('เข้าสู่ระบบไม่สำเร็จ: '+error.message,1);
+        SESS=data.session;admin();
+      }else if(hash($('pw').value)===D.pass){sessionStorage.setItem(AUTH,'1');admin();}
+      else toast('รหัสผ่านไม่ถูกต้อง',1);
+    };
     $('go').onclick=go;$('pw').onkeydown=ev=>{if(ev.key==='Enter')go();};
     return;
   }
   document.documentElement.style.setProperty('--main',D.color);
   $('app').innerHTML=`<div class="adm"><div class="adm-top"><b>⚙️ ระบบจัดการ — ${e(D.name)}</b>
-    <div><a class="btn sm gray" href="#/">ดูหน้าเว็บ</a> <button class="btn sm red" id="lo">ออกจากระบบ</button></div></div>
+    <div><span style="font-size:13px;opacity:.85;margin-right:8px">${USE_DB?'🟢 เชื่อมฐานข้อมูล Supabase':'🟡 โหมดเก็บในเครื่องนี้'}</span><a class="btn sm gray" href="#/">ดูหน้าเว็บ</a> <button class="btn sm red" id="lo">ออกจากระบบ</button></div></div>
     <div class="tabs">${TABS.map(([k,l])=>`<button class="${k===tab?'on':''}" data-t="${k}">${l}</button>`).join('')}</div>
     <div class="panel" id="panel"></div></div>`;
   document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{tab=b.dataset.t;admin();});
-  $('lo').onclick=()=>{sessionStorage.removeItem(AUTH);location.hash='#/';};
+  $('lo').onclick=async()=>{if(USE_DB){await db.auth.signOut();SESS=null;}else sessionStorage.removeItem(AUTH);location.hash='#/';};
   $('panel').innerHTML=PANELS[tab]();
 }
 /* ตัวช่วยฟอร์ม */
@@ -289,14 +330,33 @@ function set(p,v,re){const k=p.split('.'),l=k.pop(),o=k.reduce((o,x)=>o[x],D);o[
 function upload(path){
   const f=document.createElement('input');f.type='file';f.accept='image/*';
   f.onchange=()=>{const file=f.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{
-    const s=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;
-    c.getContext('2d').drawImage(im,0,0,c.width,c.height);set(path,c.toDataURL('image/jpeg',.82),1);};im.src=r.result;};r.readAsDataURL(file);};
+    const png=file.type==='image/png',mime=png?'image/png':'image/jpeg',ext=png?'png':'jpg';
+    const s=Math.min(1,(USE_DB?1400:900)/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;
+    c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+    if(!USE_DB){set(path,c.toDataURL(mime,.82),1);return;}
+    toast('กำลังอัปโหลดรูป...');
+    c.toBlob(async b=>{
+      const name=`${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+      const {error}=await db.storage.from(BUCKET).upload(name,b,{contentType:mime,cacheControl:'31536000'});
+      if(error)return toast('อัปโหลดไม่สำเร็จ: '+error.message,1);
+      set(path,db.storage.from(BUCKET).getPublicUrl(name).data.publicUrl,1);
+    },mime,.85);
+  };im.src=r.result;};r.readAsDataURL(file);};
   f.click();
 }
 function listAdd(key,tpl){D[key].push(tpl);save();admin();}
 function listDel(key,i){if(confirm('ลบรายการนี้?')){D[key].splice(i,1);save();admin();}}
 function listMove(key,i,d){const a=D[key],j=i+d;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];save();admin();}
 const ctl=(key,i)=>`<span><button class="btn sm gray" onclick="listMove('${key}',${i},-1)">↑</button> <button class="btn sm gray" onclick="listMove('${key}',${i},1)">↓</button> <button class="btn sm red" onclick="listDel('${key}',${i})">ลบ</button></span>`;
+async function chgPw(){
+  const v=$('np').value;if(v.length<6)return alert('อย่างน้อย 6 ตัวอักษร');
+  if(USE_DB){const {error}=await db.auth.updateUser({password:v});if(error)return toast(error.message,1);toast('เปลี่ยนรหัสผ่านแล้ว');}
+  else{D.pass=hash(v);save();}
+  $('np').value='';
+}
+function resetAll(){if(!confirm('รีเซ็ตกลับค่าเริ่มต้นทั้งหมด?'))return;const old=D.pass;D=structuredClone(DEF);D.pass=old;save();admin();}
+function exp(){const {pass,...pub}=D;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(pub,null,2)],{type:'application/json'}));a.download='company-profile.json';a.click();}
+function imp(){const f=document.createElement('input');f.type='file';f.accept='.json';f.onchange=()=>{const r=new FileReader();r.onload=()=>{try{const old=D.pass;D=merge(JSON.parse(r.result));D.pass=old;save();admin();}catch(_){alert('ไฟล์ไม่ถูกต้อง');}};r.readAsText(f.files[0]);};f.click();}
 const PANELS={
   info:()=>`<div class="box"><h3>ข้อมูลหลักของบริษัท</h3>${inp('ชื่อบริษัท','name')}${inp('สโลแกน','tagline')}${area('แนะนำสั้น ๆ','intro')}
     ${imgf('โลโก้','logo')}${imgf('รูปคนหน้าแรก (แสดงข้างชื่อบริษัท เช่น ผู้บริหาร/ทีมงาน)','heroImg')}${imgf('รูปพื้นหลังหน้าแรก (ถ้ามี)','cover')}
@@ -304,25 +364,14 @@ const PANELS={
   about:()=>`<div class="box"><h3>เกี่ยวกับบริษัท</h3>${inp('หัวข้อ','aboutTitle')}${area('เนื้อหา (ขึ้นบรรทัดใหม่ได้)','about')}${imgf('รูปประกอบ','aboutImg')}</div>
     <div class="box"><h3>ตัวเลขเด่น</h3>${D.stats.map((s,i)=>`<div class="item"><div class="hd">รายการ ${i+1}${ctl('stats',i)}</div><div class="row">${inp('ตัวเลข','stats.'+i+'.v')}${inp('คำอธิบาย','stats.'+i+'.l')}</div></div>`).join('')}
     <button class="btn sm" onclick="listAdd('stats',{v:'',l:''})">+ เพิ่มตัวเลข</button></div>`,
-  services:()=>`<div class="box"><h3>บริการ</h3>${D.services.map((s,i)=>`<div class="item"><div class="hd">บริการ ${i+1}${ctl('services',i)}</div>
-    <div class="row">${inp('ไอคอน (อีโมจิ)','services.'+i+'.icon')}${inp('ชื่อบริการ','services.'+i+'.title')}</div>${area('รายละเอียด','services.'+i+'.desc')}</div>`).join('')}
-    <button class="btn sm" onclick="listAdd('services',{icon:'⭐',title:'',desc:''})">+ เพิ่มบริการ</button></div>`,
-  team:()=>`<div class="box"><h3>ทีมงาน</h3>${D.team.map((m,i)=>`<div class="item"><div class="hd">คนที่ ${i+1}${ctl('team',i)}</div>
-    <div class="row">${inp('ชื่อ','team.'+i+'.name')}${inp('ตำแหน่ง','team.'+i+'.role')}</div>${imgf('รูป','team.'+i+'.img')}</div>`).join('')}
-    <button class="btn sm" onclick="listAdd('team',{name:'',role:'',img:''})">+ เพิ่มสมาชิก</button></div>`,
-  contact:()=>`<div class="box"><h3>ช่องทางติดต่อ</h3>${area('ที่อยู่','contacts.address')}<div class="row">${inp('โทรศัพท์','contacts.phone')}${inp('อีเมล','contacts.email')}</div>
-    ${inp('เวลาทำการ','contacts.hours')}<div class="row">${inp('ลิงก์ Facebook','contacts.facebook')}${inp('ลิงก์ LINE','contacts.line')}</div>
-    <p class="note">ช่องที่เว้นว่างจะไม่แสดงบนหน้าเว็บ</p></div>`,
-  settings:()=>`<div class="box"><h3>เปลี่ยนรหัสผ่านแอดมิน</h3><label>รหัสผ่านใหม่</label><input type="password" id="np">
-    <div style="margin-top:10px"><button class="btn sm" onclick="const v=$('np').value;if(v.length<6)return alert('อย่างน้อย 6 ตัวอักษร');D.pass=hash(v);save();$('np').value=''">บันทึกรหัสผ่าน</button></div></div>
+  settings:()=>`<div class="box"><h3>เปลี่ยนรหัสผ่านแอดมิน</h3><label>รหัสผ่านใหม่</label><input type="password" id="np" autocomplete="new-password">
+    <div style="margin-top:10px"><button class="btn sm" onclick="chgPw()">บันทึกรหัสผ่าน</button></div></div>
     <div class="box"><h3>สำรอง / นำเข้าข้อมูล</h3>
     <button class="btn sm" onclick="exp()">ดาวน์โหลดข้อมูล (JSON)</button>
     <button class="btn sm gray" onclick="imp()">นำเข้าข้อมูล</button>
-    <button class="btn sm red" onclick="if(confirm('รีเซ็ตกลับค่าเริ่มต้นทั้งหมด?')){localStorage.removeItem(KEY);load();admin();toast('รีเซ็ตแล้ว')}">รีเซ็ตทั้งหมด</button>
-    <p class="note">ข้อมูลเก็บในเบราว์เซอร์เครื่องนี้ หากต้องการให้ทุกคนเห็นข้อมูลที่แก้ ให้ดาวน์โหลดไฟล์ HTML นี้ไปฝังข้อมูลหรือเชื่อมฐานข้อมูล (เช่น Supabase)</p></div>`
+    <button class="btn sm red" onclick="resetAll()">รีเซ็ตทั้งหมด</button>
+    <p class="note">${USE_DB?'ข้อมูลเก็บในฐานข้อมูล Supabase ทุกคนที่เปิดเว็บจะเห็นข้อมูลชุดเดียวกัน':'ตอนนี้ข้อมูลเก็บในเบราว์เซอร์เครื่องนี้เท่านั้น ใส่ SB_URL และ SB_KEY ที่ต้นสคริปต์เพื่อเชื่อมฐานข้อมูล'}</p></div>`
 };
-function exp(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(D,null,2)],{type:'application/json'}));a.download='company-profile.json';a.click();}
-function imp(){const f=document.createElement('input');f.type='file';f.accept='.json';f.onchange=()=>{const r=new FileReader();r.onload=()=>{try{D=Object.assign(structuredClone(DEF),JSON.parse(r.result));save();admin();}catch(_){alert('ไฟล์ไม่ถูกต้อง');}};r.readAsText(f.files[0]);};f.click();}
 
 /* ============ router ============ */
 /* ============ FX: ลูกเล่นทั้งเว็บ ============ */
@@ -398,7 +447,7 @@ function fx(){
 }
 function route(){window.scrollTo(0,0);location.hash==='#/admin'?admin():site();fx();}
 window.addEventListener('hashchange',route);
-load();route();
+(async()=>{await initAuth();await load();route();if(USE_DB)setInterval(poll,8000);})();
 </script>
 </body>
 </html>
