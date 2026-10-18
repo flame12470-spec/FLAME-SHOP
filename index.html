@@ -17,7 +17,7 @@ a{color:inherit;text-decoration:none}button,input,textarea,select{font:inherit}.
 .topline{height:4px;background:linear-gradient(90deg,#520006,var(--red),#ff6b6b,#520006)}
 header{position:sticky;top:0;z-index:10;background:#0a0909df;backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
 .nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}
-.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.08em}.brandmark{width:42px;height:42px;display:grid;place-items:center;background:linear-gradient(145deg,#ff353d,#8d0009);clip-path:polygon(0 0,100% 0,75% 100%,0 78%);font-style:italic;font-size:21px;color:white;box-shadow:0 0 24px #f11a2530}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.08em}.brandmark{width:42px;height:42px;display:grid;place-items:center;background:linear-gradient(145deg,#ff353d,#8d0009);clip-path:polygon(0 0,100% 0,75% 100%,0 78%);font-style:italic;font-size:21px;color:white;box-shadow:0 0 24px #f11a2530;overflow:hidden}.brandmark img{width:100%;height:100%;object-fit:contain;background:#0a0909;padding:3px}
 .brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:.18em;font-weight:500;margin-top:-5px}
 .navlinks{display:flex;gap:25px;color:#d4cbc1;font-size:14px}.navlinks a:hover{color:#ff525a}.navcta,.btn{border:0;border-radius:999px;padding:12px 19px;background:var(--red);color:#fff;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.2s}.navcta:hover,.btn:hover{transform:translateY(-2px);background:#ff303a;box-shadow:0 10px 28px #e51b2930}.btn.secondary{background:transparent;border:1px solid #ffffff35;color:var(--cream)}.btn.secondary:hover{border-color:var(--red)}
 .hero{padding:92px 0 70px;position:relative;overflow:hidden}.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:55px;align-items:center}
@@ -44,7 +44,7 @@ footer{border-top:1px solid var(--line);padding:27px 0 35px;color:#8e837d;font-s
 <body>
 <div class="topline"></div>
 <header><div class="wrap nav">
-  <a class="brand" href="#home"><span class="brandmark">F</span><span><span id="brandName">FLAME SHOP</span><small>WEB STUDIO · THAILAND</small></span></a>
+  <a class="brand" href="#home"><span class="brandmark" id="brandmark"><span id="brandFallback">F</span><img id="brandLogo" alt="โลโก้ FLAME SHOP" hidden></span><span><span id="brandName">FLAME SHOP</span><small>WEB STUDIO · THAILAND</small></span></a>
   <nav class="navlinks"><a href="#services">บริการ</a><a href="#policies">นโยบาย</a><a href="#contact">ติดต่อเรา</a></nav>
   <a class="navcta" href="#contact">เริ่มโปรเจกต์ ↗</a>
 </div></header>
@@ -104,7 +104,7 @@ const fallbackPolicies=[
  {title:"ข้อมูลและความเป็นส่วนตัว",body:"ข้อมูลที่ส่งผ่านแบบฟอร์มนี้ใช้เพื่อประเมินงานและติดต่อกลับเท่านั้น เราจะจำกัดการเข้าถึงตามความจำเป็น และไม่ควรส่งข้อมูลอ่อนไหว เช่น รหัสผ่านหรือข้อมูลบัตรชำระเงิน."},
  {title:"การส่งมอบและการดูแลหลังงาน",body:"รายละเอียดไฟล์ต้นฉบับ โดเมน โฮสติ้ง การรับประกัน และการดูแลหลังส่งมอบให้ยึดตามข้อตกลงของโปรเจกต์ ลูกค้าควรเก็บข้อมูลบัญชีและสิทธิ์เข้าถึงระบบอย่างปลอดภัย."}
 ];
-function renderServices(items){const list=$("serviceList");list.innerHTML="";(items.length?items:fallbackServices).forEach((s,i)=>{const el=document.createElement("article");el.className="service";el.innerHTML=`<span class="num">${safe(s.icon || String(i+1).padStart(2,"0"))}</span><span class="arrow">↗</span><h3>${safe(s.title)}</h3><p>${safe(s.description)}</p>`;list.appendChild(el)});const sel=$("service");(items.length?items:fallbackServices).forEach(s=>{const o=document.createElement("option");o.value=s.title;o.textContent=s.title;sel.appendChild(o)})}
+function renderServices(items){const list=$("serviceList");list.innerHTML="";(items.length?items:fallbackServices).forEach((s,i)=>{const el=document.createElement("article");el.className="service";el.innerHTML=`<span class="num">${safe(s.icon || String(i+1).padStart(2,"0"))}</span><span class="arrow">↗</span><h3>${safe(s.title)}</h3><p>${safe(s.description)}</p>`;list.appendChild(el)});const sel=$("service"),selected=sel.value;sel.replaceChildren(new Option("เลือกบริการ (ไม่บังคับ)",""));(items.length?items:fallbackServices).forEach(s=>sel.add(new Option(s.title,s.title)));sel.value=selected}
 function renderPolicies(items){const list=$("policyList");list.innerHTML="";(items.length?items:fallbackPolicies).forEach((p,i)=>{const d=document.createElement("details");d.className="policy";if(i===0)d.open=true;d.innerHTML=`<summary>${safe(p.title)}</summary><div class="policy-body">${safe(p.body)}</div>`;list.appendChild(d)})}
 async function loadData(){
  if(!db){renderServices(fallbackServices);renderPolicies(fallbackPolicies);return}
@@ -120,6 +120,7 @@ async function loadData(){
  }catch(err){console.error("Supabase load error:",err);renderServices(fallbackServices);renderPolicies(fallbackPolicies)}
 }
 function applySiteContent(c){
+ if(c.logo_url){const logo=$("brandLogo");logo.src=c.logo_url;logo.hidden=false;$("brandFallback").hidden=true;logo.onerror=()=>{logo.hidden=true;$("brandFallback").hidden=false}}else{$("brandLogo").hidden=true;$("brandFallback").hidden=false}
  if(c.site_name){$("brandName").textContent=c.site_name;$("footerName").textContent=c.site_name;document.title=c.site_name+" — Web Studio"}
  if(c.hero_text)$("heroText").textContent=c.hero_text;
  if(c.contact_email)$("contactEmail").textContent=c.contact_email;
@@ -168,7 +169,7 @@ async function loadAdminData(){
   ]);
   const err=[c.error,s.error,p.error,i.error].find(Boolean);if(err)throw err;
   adminState.site=c.data||[];adminState.services=s.data||[];adminState.policies=p.data||[];adminState.inquiries=i.data||[];
-  renderAdminPane();adminMsg("ซิงก์ล่าสุด "+new Date().toLocaleTimeString("th-TH"),true);
+  const editing=$("adminPane").contains(document.activeElement)&&["INPUT","TEXTAREA","SELECT"].includes(document.activeElement.tagName);if(!editing)renderAdminPane();adminMsg("ซิงก์ล่าสุด "+new Date().toLocaleTimeString("th-TH"),true);
  }catch(err){console.error("Admin load error:",err);adminMsg("โหลดข้อมูลไม่ได้: ตรวจสอบสิทธิ์ Admin และ RLS ใน Supabase")}
 }
 function fieldHtml(label,name,value,type="text",wide=false){
@@ -177,7 +178,10 @@ function fieldHtml(label,name,value,type="text",wide=false){
 function renderAdminPane(){
  const pane=$("adminPane");
  if(adminState.tab==="content"){
-  const fields=adminState.site.map(x=>fieldHtml(x.key,x.key,x.value,"text",true)).join("");
+  const siteMap=Object.fromEntries(adminState.site.map(x=>[x.key,x.value]));
+  const defaults=[{key:"site_name",value:"FLAME SHOP"},{key:"hero_text",value:""},{key:"contact_email",value:""},{key:"contact_hours",value:""},{key:"contact_location",value:""},{key:"copyright_text",value:""},{key:"logo_url",value:""}];
+  const keys=new Set(adminState.site.map(x=>x.key));
+  const fields=[...adminState.site.map(x=>fieldHtml(x.key,x.key,x.value,"text",true)),...defaults.filter(x=>!keys.has(x.key)).map(x=>fieldHtml(x.key,x.key,x.value,"text",true))].join("");
   pane.innerHTML=`<h3>ข้อมูลเว็บไซต์</h3><p class="admin-muted">แก้ไขข้อความและข้อมูลติดต่อที่แสดงบนหน้าเว็บไซต์</p><form id="siteContentForm"><div class="admin-form-grid">${fields||'<div class="admin-empty">ยังไม่มีข้อมูล</div>'}</div><button class="btn" type="submit">บันทึกข้อมูลเว็บไซต์</button></form>`;
   $("siteContentForm").addEventListener("submit",saveSiteContent);
  }else if(adminState.tab==="services"){
@@ -237,8 +241,20 @@ async function deleteRow(table,id,label){
  const {error}=await db.from(table).delete().eq("id",id);
  if(error)adminMsg("ลบไม่สำเร็จ ตรวจสอบ RLS");else{adminMsg("ลบข้อมูลแล้ว",true);await loadAdminData();await loadData()}
 }
-// Poll public content and the open admin panel every five seconds.
-setInterval(()=>{loadData();if(!$("adminOverlay").hidden&&adminState.user&&!$("adminDashboard").hidden)loadAdminData()},5000);
+
+$("contactForm").addEventListener("submit",async e=>{
+ e.preventDefault();const form=e.currentTarget,btn=$("submitBtn"),status=$("formStatus");
+ if(!db){status.textContent="ระบบยังเชื่อมต่อฐานข้อมูลไม่ได้ กรุณาตรวจสอบการตั้งค่า Supabase";return}
+ const data=new FormData(form);const payload={name:String(data.get("name")||"").trim(),contact:String(data.get("email")||"").trim(),service:String(data.get("service")||"").trim()||null,message:String(data.get("message")||"").trim(),status:"new"};
+ if(!payload.name||!payload.contact||!payload.message){status.textContent="กรุณากรอกข้อมูลที่มีเครื่องหมาย * ให้ครบ";return}
+ btn.disabled=true;btn.textContent="กำลังส่งข้อมูล…";status.textContent="";
+ try{const {error}=await db.from("site_inquiries").insert(payload);if(error)throw error;form.reset();status.style.color="#8fe0aa";status.textContent="ส่งข้อมูลเรียบร้อยแล้ว ทีมงานจะติดต่อกลับ"}
+ catch(err){console.error("Contact submit error:",err);status.style.color="#ff777d";status.textContent="ส่งข้อมูลไม่สำเร็จ กรุณาตรวจสอบตาราง site_inquiries และสิทธิ์ INSERT (RLS) ใน Supabase"}
+ finally{btn.disabled=false;btn.textContent="ส่งข้อมูลให้ทีมงาน ↗"}
+});
+
+// Poll public content periodically. Admin panel only refreshes when the user requests it, so fields do not reset while typing.
+setInterval(()=>{if($("adminOverlay").hidden)loadData()},30000);
 $("year").textContent=new Date().getFullYear();loadData();
 </script>
 </body></html>
