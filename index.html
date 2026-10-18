@@ -87,8 +87,8 @@ footer{border-top:1px solid var(--line);padding:27px 0 35px;color:#8e837d;font-s
 </div>
 <script>
 /* ตั้งค่า URL และ anon key ของ Supabase ในส่วนนี้ก่อนใช้งานจริง */
-const SUPABASE_URL = "https://YOUR_PROJECT.supabase.co";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const SUPABASE_URL = "https://aefzegkgfwszuiznihsk.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_Z1zogpI9qqUlegxG816ncQ_eHeaiFvr";
 const CONFIGURED = SUPABASE_URL.includes(".supabase.co") && !SUPABASE_URL.includes("YOUR_PROJECT") && !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
 const db = CONFIGURED ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 const $ = (id)=>document.getElementById(id);
